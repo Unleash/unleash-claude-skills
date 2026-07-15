@@ -71,7 +71,7 @@ For every change in this domain:
 For this domain, override the defaults in `rollout-guidance.md`:
 
 - Start at **1%**, not 10%.
-- Hold **48 hours** at each milestone, not 24.
+- Hold **48 hours** at every milestone (the default holds 24h at the first step, 48h at the second).
 - Add a `25%` milestone between 10% and 50%.
 - Halt thresholds are **stricter**: pause if error rate exceeds 0.1% (one tenth of the default 1%).
 

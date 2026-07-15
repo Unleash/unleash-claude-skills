@@ -75,11 +75,11 @@ This skill ships as a template. Edit the reference files before rolling it out b
 
 - **High-risk domains** in `references/high-risk-domains.md` — replace the payments example with your own domains (auth, billing, data migrations, public API, etc.). *This is the file you'll edit most.*
 - **Naming convention** in `references/feature-flag-conventions.md` — the default is `{domain}-{feature}-{variant}`; swap for your team's pattern.
-- **Rollout milestones** in `references/rollout-guidance.md` — default is 10% → 50% → 100% with 24-hour holds; adjust for your release cadence.
+- **Rollout milestones** in `references/rollout-guidance.md` — default is 10% → 50% → 100% with 24–48h holds (24h at 10%, 48h at 50%); adjust for your release cadence.
 - **Cleanup cadence** in `references/cleanup-cadence.md` — default staleness signals are Unleash's `stale` marker, 30 days with no SDK evaluation, and Unleash's per-type lifetimes (release/experiment 40 days, operational 7 days); adjust for your tolerance.
 - **Description keywords** in this file's frontmatter — add domain-specific vocabulary (e.g. "checkout flag", "billing rollout") so the skill activates for your team's terms.
 
-Every customizable spot in the reference files is marked with an HTML comment: `<!-- CUSTOMIZE: ... -->`. Run `grep -rn CUSTOMIZE references/` to find them all.
+Every customizable spot in the reference files is marked with an HTML comment: `<!-- CUSTOMIZE: ... -->`. From this skill's directory, run `grep -rn CUSTOMIZE references/` to find them all (from the repository root, use `grep -rn CUSTOMIZE skills/`).
 
 ---
 

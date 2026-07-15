@@ -3,7 +3,7 @@
 ## Customize this file for your team
 
 - **Starting percentage:** default is 10%. Lower for very high-risk changes; higher for low-risk internal features.
-- **Hold duration between milestones:** default is 24 hours. Shorten for fast-moving teams; lengthen for regulated industries.
+- **Hold duration between milestones:** default is 24h at the first step and 48h at the second (see the table below). Shorten for fast-moving teams; lengthen for regulated industries.
 - **Halt thresholds:** defaults are >1% error rate and >20% p95 latency increase. Tune to your SLOs.
 - **Milestone count and percentages:** default is 10% → 50% → 100% (three steps). Some teams prefer 1% → 10% → 25% → 50% → 100% (five steps) for higher-traffic services.
 - **Environments included:** default assumes `development`, `staging`, `production`. Add `canary`, `preview`, or region-specific environments if you use them.
