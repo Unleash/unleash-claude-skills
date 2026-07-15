@@ -1,0 +1,14 @@
+# Local Claude Code state — never commit machine-specific settings or secrets
+.claude/settings.local.json
+
+# OS / editor cruft
+.DS_Store
+*.swp
+
+# Node (in case a local MCP install leaves artifacts)
+node_modules/
+npm-debug.log*
+
+# Credentials — never commit
+.env
+*.env
