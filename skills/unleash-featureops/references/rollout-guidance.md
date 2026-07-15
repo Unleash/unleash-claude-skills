@@ -8,9 +8,9 @@
 - **Milestone count and percentages:** default is 10% → 50% → 100% (three steps). Some teams prefer 1% → 10% → 25% → 50% → 100% (five steps) for higher-traffic services.
 - **Environments included:** default assumes `development`, `staging`, `production`. Add `canary`, `preview`, or region-specific environments if you use them.
 
----
+When Claude reads this file, it applies the guidance below; the notes above are for the humans customizing it.
 
-# Rollout guidance
+---
 
 This file applies when the conversation involves rolling out feature flags. Use it to configure `set_flag_rollout` and `toggle_flag_environment` calls.
 

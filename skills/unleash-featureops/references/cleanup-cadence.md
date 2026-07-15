@@ -7,9 +7,9 @@
 - **Permanent-flag exceptions:** Unleash treats `kill-switch` and `permission` as permanent (no expected lifetime). If your team treats other types as permanent, list them here.
 - **Cleanup ownership:** default assumes the engineer who created the flag also removes it. If your team has a centralized FeatureOps function, adjust accordingly.
 
----
+When Claude reads this file, it applies the guidance below; the notes above are for the humans customizing it.
 
-# Cleanup cadence
+---
 
 Most feature flags are temporary by design. Flags have lifecycles: every flag should have an owner, a purpose, and an expiration plan. Stale flags accumulate technical debt, confuse future readers, and increase the risk that an unrelated change accidentally re-enables old code. This file applies when the conversation involves removing flags or auditing for cleanup opportunities.
 

@@ -64,7 +64,7 @@ This minimal form relies on the environment variables you export below. Unleash'
 
 ### Environment variables
 
-Both transports use `${VAR}` expansion. Set:
+Both transports use Claude Code's `.mcp.json` environment-variable expansion, which supports `${VAR}` and the default form `${VAR:-default}` (the config uses `${UNLEASH_DEFAULT_PROJECT:-default}` so the project falls back to `default` when the variable is unset). Set:
 
 ```bash
 export UNLEASH_BASE_URL=https://your-instance.getunleash.io/api

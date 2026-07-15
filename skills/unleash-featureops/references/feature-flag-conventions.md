@@ -7,11 +7,9 @@
 - **What counts as "high-risk":** default mentions payments, authentication, data migrations, external integrations. Add the categories that matter for your business.
 - **Mandatory vs. optional evaluation:** default is "evaluate before implementing high-risk changes". Some teams require flags for *all* user-facing changes — adjust to your bar.
 
-When Claude reads this file, apply the rules as written. The bullets above are for the humans editing the file.
+When Claude reads this file, it applies the guidance below; the notes above are for the humans customizing it.
 
 ---
-
-# Feature flag conventions
 
 These conventions govern how feature flags are named, created, and used in this codebase. Apply them whenever code changes might benefit from a feature flag.
 

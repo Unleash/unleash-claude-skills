@@ -22,9 +22,9 @@ Then, for each domain, decide:
 
 Duplicate the worked example below for each domain you want to protect.
 
----
+When Claude reads this file, it applies the policies below; the notes above are for the humans customizing it.
 
-# High-risk domains
+---
 
 This file applies when the conversation involves files in a high-risk domain. Apply the matching policy to all changes in scope.
 
