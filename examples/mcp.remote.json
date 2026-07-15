@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "unleash": {
+      "type": "http",
+      "url": "https://your-instance.getunleash.io/api/admin/mcp",
+      "headers": {
+        "Authorization": "Bearer ${UNLEASH_PAT}"
+      }
+    }
+  }
+}

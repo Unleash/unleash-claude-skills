@@ -1,0 +1,27 @@
+{
+  "name": "unleash-featureops",
+  "version": "1.0.0",
+  "description": "FeatureOps for Claude Code: manage Unleash feature flags — evaluate risk, create and wrap flags, plan rollouts, and clean up stale flags. Ships as a customizable template.",
+  "author": {
+    "name": "Unleash",
+    "email": "support@getunleash.io",
+    "url": "https://www.getunleash.io"
+  },
+  "homepage": "https://github.com/Unleash/unleash-claude-skill",
+  "repository": "https://github.com/Unleash/unleash-claude-skill",
+  "license": "Apache-2.0",
+  "keywords": [
+    "feature flag",
+    "feature toggle",
+    "feature management",
+    "rollout",
+    "release",
+    "experiment",
+    "kill-switch",
+    "canary",
+    "progressive delivery",
+    "featureops",
+    "unleash",
+    "flag audit"
+  ]
+}
