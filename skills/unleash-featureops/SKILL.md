@@ -13,7 +13,7 @@ The defaults work out of the box, but feature management conventions vary across
 
 ## Setup check
 
-This skill needs the Unleash MCP server connected. When installed as a Claude Code plugin, the server is registered automatically from the bundled `.mcp.json`; you only need to set three environment variables in the shell that launches Claude Code:
+This skill needs the Unleash MCP server connected. When installed as a Claude Code plugin, the server is registered automatically from the bundled `.mcp.json`; you only need to set three environment variables in the shell that launches Claude Code (or use the remote MCP server — see `examples/README.md` for details):
 
 ```bash
 export UNLEASH_BASE_URL=https://your-instance.getunleash.io/api

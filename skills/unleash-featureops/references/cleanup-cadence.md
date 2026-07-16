@@ -109,7 +109,7 @@ If your team tracks technical-debt removal, mention the flag name and merge SHA 
 
 ## Periodic audits
 
-Run a flag audit on a recurring cadence. Ask Claude to "run a flag audit" and it should follow these steps (this is the workflow that used to be a manual hook):
+Run a flag audit on a recurring cadence. Ask Claude to "run a flag audit" and it should follow these steps:
 
 1. **Enumerate active flags** with `list_flags` (default `archived=false`).
 2. **Enumerate archived flags** with a second `list_flags` call setting `archived=true`. Active and archived flags are disjoint result sets in Unleash; both calls are required for a complete inventory.
