@@ -2,7 +2,7 @@
 
 A Claude Code **plugin** that brings [Unleash](https://www.getunleash.io) feature management into your editor — a growing set of skills backed by the [Unleash MCP server](https://github.com/Unleash/unleash-mcp), encoding [FeatureOps](https://featureops.io) practices: controlling software behavior at runtime.
 
-Every skill ships as a **customizable template**. The defaults work out of the box; fork the repo and adapt each skill's reference files to your team's domains and conventions.
+Skills work out of the box. Some — like [`featureops`](skills/featureops/) — also ship as **customizable templates** you fork and adapt to your team's conventions; each skill's README says whether and how.
 
 ## Skills
 
@@ -96,16 +96,6 @@ Once installed, a skill activates automatically when relevant, or you invoke it 
 Each skill documents its own workflow, prompts, and customization in its README:
 
 - **[`featureops`](skills/featureops/README.md)** — feature-flag lifecycle: risk evaluation, creation, wrapping, rollout, cleanup.
-
-## Customize for your team
-
-Every skill ships as a template. Customizable spots in the reference files are marked with `<!-- CUSTOMIZE: ... -->`; find them all with:
-
-```bash
-grep -rn CUSTOMIZE skills/
-```
-
-See each skill's README for what to adapt (for example, [FeatureOps customization](skills/featureops/README.md#customize-for-your-team)).
 
 ## Add a new skill
 

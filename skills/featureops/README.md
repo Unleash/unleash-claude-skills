@@ -2,6 +2,8 @@
 
 A skill in the [Unleash plugin for Claude Code](../../README.md). It brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into Claude Code: evaluate changes for risk, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags.
 
+This skill ships as a **customizable template**: the defaults work out of the box, but you adapt the reference files to your team's domains and conventions — see [Customize for your team](#customize-for-your-team).
+
 Install it with the plugin (`/plugin install unleash@unleash-marketplace`) or standalone (`cp -r skills/featureops ~/.claude/skills/`). See the [main README](../../README.md#install) for MCP setup and environment variables.
 
 ## What's inside
