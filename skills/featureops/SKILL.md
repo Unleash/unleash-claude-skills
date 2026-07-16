@@ -87,8 +87,8 @@ Every customizable spot in the reference files is marked with an HTML comment: `
 
 - **License:** Apache-2.0
 - **Privacy Policy:** https://www.getunleash.io/privacy-policy
-- **Support:** support@getunleash.io · GitHub Issues at https://github.com/Unleash/unleash-claude-skill/issues
-- **Source:** https://github.com/Unleash/unleash-claude-skill
+- **Support:** support@getunleash.io · GitHub Issues at https://github.com/Unleash/unleash-claude-skills/issues
+- **Source:** https://github.com/Unleash/unleash-claude-skills
 
 ### MCP server attribution
 
