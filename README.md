@@ -8,11 +8,11 @@ The defaults work out of the box, but feature management conventions vary widely
 
 | Path | Purpose |
 |---|---|
-| `skills/unleash-featureops/SKILL.md` | The skill entry point. Frontmatter (name, description, pre-approved read-only tools), setup check, reference map, core workflow, tool reference, customization guide. |
-| `skills/unleash-featureops/references/feature-flag-conventions.md` | Universal naming, types, and lifecycle rules. |
-| `skills/unleash-featureops/references/rollout-guidance.md` | Default rollout milestones, hold durations, halt conditions. |
-| `skills/unleash-featureops/references/cleanup-cadence.md` | Thresholds and workflow for removing stale flags, plus the flag-audit workflow. |
-| `skills/unleash-featureops/references/high-risk-domains.md` | Worked example (payments) + template for adding your own domains. |
+| `skills/featureops/SKILL.md` | The skill entry point. Frontmatter (name, description, pre-approved read-only tools), setup check, reference map, core workflow, tool reference, customization guide. |
+| `skills/featureops/references/feature-flag-conventions.md` | Universal naming, types, and lifecycle rules. |
+| `skills/featureops/references/rollout-guidance.md` | Default rollout milestones, hold durations, halt conditions. |
+| `skills/featureops/references/cleanup-cadence.md` | Thresholds and workflow for removing stale flags, plus the flag-audit workflow. |
+| `skills/featureops/references/high-risk-domains.md` | Worked example (payments) + template for adding your own domains. |
 | `.mcp.json` | Default MCP server config — local stdio transport via `npx`. Auto-registered when installed as a plugin. |
 | `examples/mcp.remote.json` | Alternative MCP config — remote HTTP transport for Unleash-hosted MCP. |
 | `hooks/evaluate-high-risk-save.example.json` | Optional, opt-in `PostToolUse` hook that evaluates risky edits. Not loaded automatically. |
@@ -37,7 +37,7 @@ Installing as a plugin auto-registers the Unleash MCP server from the bundled `.
 
 ```text
 /plugin marketplace add Unleash/unleash-claude-skill
-/plugin install unleash-featureops@unleash
+/plugin install unleash@unleash-marketplace
 ```
 
 Then set your environment variables (below) and restart Claude Code or use `/reload-plugins`.
@@ -48,13 +48,13 @@ Copy the skill directory into your skills folder:
 
 ```bash
 # personal (all your projects)
-cp -r skills/unleash-featureops ~/.claude/skills/
+cp -r skills/featureops ~/.claude/skills/
 
 # or project-scoped (this repo only)
-mkdir -p .claude/skills && cp -r skills/unleash-featureops .claude/skills/
+mkdir -p .claude/skills && cp -r skills/featureops .claude/skills/
 ```
 
-Because a standalone skill can't bundle an MCP server, register it yourself — copy `.mcp.json` to your project root, or add the server directly:
+Because a standalone skill can't bundle an MCP server, register it yourself. Use the server key `unleash` so the skill's pre-approved tool names match (the bundled `.mcp.json` keys the server `mcp` for the *plugin* install path, so add it explicitly here rather than copying that file):
 
 ```bash
 claude mcp add unleash -- npx -y @unleash/mcp@latest --log-level error
@@ -98,7 +98,7 @@ Restart the shell, then restart Claude Code. Verify the tools are available by a
 
 ## Use it
 
-Once the MCP server is connected, the skill activates automatically when you talk about feature flags, rollouts, kill-switches, or Unleash. Or when you invoke it directly with `/unleash-featureops`. Typical prompts:
+Once the MCP server is connected, the skill activates automatically when you talk about feature flags, rollouts, kill-switches, or Unleash. Or when you invoke it directly with `/unleash:featureops`. Typical prompts:
 
 - *"Should this checkout change be behind a feature flag?"* → runs `evaluate_change`
 - *"Create a release flag for the new search ranking and wrap the endpoint."* → `detect_flag` → `create_flag` → `wrap_change`

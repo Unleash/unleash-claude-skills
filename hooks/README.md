@@ -4,7 +4,7 @@ This template provides two automation behaviors around feature-flag work. They l
 
 | Behavior | How it works | Where it lives |
 |---|---|---|
-| **Flag audit** (on demand) | Ask Claude to "run a flag audit" and the skill follows the audit workflow | `skills/unleash-featureops/references/cleanup-cadence.md` → *Periodic audits* |
+| **Flag audit** (on demand) | Ask Claude to "run a flag audit" and the skill follows the audit workflow | `skills/featureops/references/cleanup-cadence.md` → *Periodic audits* |
 | **High-risk-edit check** (on file edit) | A `PostToolUse` hook matching `Edit`/`Write` that reminds you to evaluate risky changes for a flag | `evaluate-high-risk-save.example.json` (this directory) |
 
 ## Why the file-edit hook is opt-in
@@ -25,7 +25,7 @@ Edit `evaluate-high-risk-save.example.json` first:
 Then activate it one of two ways:
 
 1. **Merge into settings** — copy the `hooks` block into your project `.claude/settings.json` (or `~/.claude/settings.json` for all projects).
-2. **Activate as a plugin hook** — rename the file to `hooks/hooks.json` in your local copy of this repo. It will load whenever the `unleash-featureops` plugin is enabled. (Reverting to opt-in = rename it back.)
+2. **Activate as a plugin hook** — rename the file to `hooks/hooks.json` in your local copy of this repo. It will load whenever the `unleash` plugin is enabled. (Reverting to opt-in = rename it back.)
 
 Reload with `/reload-plugins` (plugin hooks) or restart Claude Code (settings hooks), then confirm the hook appears in `/hooks`.
 
@@ -35,5 +35,5 @@ Reload with `/reload-plugins` (plugin hooks) or restart Claude Code (settings ho
 
 ## Related
 
-- Conventions the hook references: `../skills/unleash-featureops/references/feature-flag-conventions.md`, `../skills/unleash-featureops/references/high-risk-domains.md`
+- Conventions the hook references: `../skills/featureops/references/feature-flag-conventions.md`, `../skills/featureops/references/high-risk-domains.md`
 - Claude Code hooks reference: https://code.claude.com/docs/en/hooks

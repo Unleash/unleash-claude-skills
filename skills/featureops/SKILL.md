@@ -1,8 +1,8 @@
 ---
-name: unleash-featureops
+name: featureops
 description: Manage feature flags with Unleash — evaluate whether a code change needs a flag, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags. Use when working with feature flags, feature toggles, rollouts, releases, experiments, kill-switches, canary deploys, or the Unleash MCP server. Ships as a customizable FeatureOps template — adapt the reference files to your team's conventions.
 license: Apache-2.0
-allowed-tools: mcp__unleash__evaluate_change mcp__unleash__detect_flag mcp__unleash__get_flag_state mcp__unleash__list_projects mcp__unleash__list_flags mcp__plugin_unleash-featureops_unleash__evaluate_change mcp__plugin_unleash-featureops_unleash__detect_flag mcp__plugin_unleash-featureops_unleash__get_flag_state mcp__plugin_unleash-featureops_unleash__list_projects mcp__plugin_unleash-featureops_unleash__list_flags
+allowed-tools: mcp__unleash__evaluate_change mcp__unleash__detect_flag mcp__unleash__get_flag_state mcp__unleash__list_projects mcp__unleash__list_flags mcp__plugin_unleash_mcp__evaluate_change mcp__plugin_unleash_mcp__detect_flag mcp__plugin_unleash_mcp__get_flag_state mcp__plugin_unleash_mcp__list_projects mcp__plugin_unleash_mcp__list_flags
 ---
 
 # Unleash · FeatureOps Template
@@ -23,7 +23,7 @@ export UNLEASH_DEFAULT_PROJECT=default   # optional; defaults to "default"
 
 If the Unleash tools are not available, tell the user to complete setup (see the repository README for full install, transport, and credential instructions) and stop rather than guessing flag state.
 
-> **Tool naming note:** the read-only tools are pre-approved via `allowed-tools` under two names each: `mcp__unleash__*` (standalone-skill install, where you register the server as `unleash`) and `mcp__plugin_unleash-featureops_unleash__*` (plugin install, where Claude Code namespaces bundled MCP tools as `mcp__plugin_<plugin>_<server>__<tool>`). The plugin-scoped form is a best-effort match — if a plugin install still prompts for a read-only tool, read the exact tool name off the permission prompt (or `/mcp`) and align `allowed-tools` to it. Write operations (`create_flag`, `set_flag_rollout`, `toggle_flag_environment`, `remove_flag_strategy`, `cleanup_flag`) are **never** pre-approved — always let the user confirm them.
+> **Tool naming note:** the read-only tools are pre-approved via `allowed-tools` under two names each: `mcp__unleash__*` (standalone-skill install, where you register the server under the key `unleash`) and `mcp__plugin_unleash_mcp__*` (plugin install, where Claude Code namespaces the bundled server — keyed `mcp` in `.mcp.json` — as `mcp__plugin_<plugin>_<server>__<tool>` → `mcp__plugin_unleash_mcp__<tool>`, verified on a real install). Pre-approval only applies while this skill is active; a read-only tool invoked before the skill has loaded will still prompt once. Write operations (`create_flag`, `set_flag_rollout`, `toggle_flag_environment`, `remove_flag_strategy`, `cleanup_flag`) are **never** pre-approved — always let the user confirm them.
 
 ## When to load the reference files
 

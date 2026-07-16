@@ -1,5 +1,5 @@
 {
-  "name": "unleash-featureops",
+  "name": "unleash",
   "version": "1.0.0",
   "description": "FeatureOps for Claude Code: manage Unleash feature flags — evaluate risk, create and wrap flags, plan rollouts, and clean up stale flags. Ships as a customizable template.",
   "author": {

@@ -8,13 +8,13 @@
             "type": "command",
             "if": "Edit(src/payments/**)",
             "statusMessage": "Checking whether this high-risk change needs a feature flag...",
-            "command": "echo 'A file in a high-risk domain was just edited. Before continuing, use the Unleash MCP server evaluate_change tool to determine whether this change should be behind a feature flag. If yes: call detect_flag first to avoid duplicates, then propose create_flag and wrap_change following the naming conventions in the unleash-featureops skill references. Do not auto-create — wait for user confirmation.'"
+            "command": "echo 'A file in a high-risk domain was just edited. Before continuing, use the Unleash MCP server evaluate_change tool to determine whether this change should be behind a feature flag. If yes: call detect_flag first to avoid duplicates, then propose create_flag and wrap_change following the naming conventions in the featureops skill references. Do not auto-create — wait for user confirmation.'"
           },
           {
             "type": "command",
             "if": "Write(src/payments/**)",
             "statusMessage": "Checking whether this high-risk change needs a feature flag...",
-            "command": "echo 'A file in a high-risk domain was just edited. Before continuing, use the Unleash MCP server evaluate_change tool to determine whether this change should be behind a feature flag. If yes: call detect_flag first to avoid duplicates, then propose create_flag and wrap_change following the naming conventions in the unleash-featureops skill references. Do not auto-create — wait for user confirmation.'"
+            "command": "echo 'A file in a high-risk domain was just edited. Before continuing, use the Unleash MCP server evaluate_change tool to determine whether this change should be behind a feature flag. If yes: call detect_flag first to avoid duplicates, then propose create_flag and wrap_change following the naming conventions in the featureops skill references. Do not auto-create — wait for user confirmation.'"
           }
         ]
       }

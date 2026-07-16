@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "unleash": {
+    "mcp": {
       "command": "npx",
       "args": ["-y", "@unleash/mcp@latest", "--log-level", "error"],
       "env": {
