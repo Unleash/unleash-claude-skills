@@ -1,7 +1,7 @@
 {
   "name": "unleash",
-  "version": "1.0.0",
-  "description": "FeatureOps for Claude Code: manage Unleash feature flags — evaluate risk, create and wrap flags, plan rollouts, and clean up stale flags. Ships as a customizable template.",
+  "version": "1.1.0",
+  "description": "Unleash feature management for Claude Code: skills for the full flag lifecycle — evaluate risk, create and wrap flags, plan rollouts, clean up stale flags, and migrate flags from GitLab — backed by the bundled Unleash MCP server.",
   "author": {
     "name": "Unleash",
     "email": "support@getunleash.io",
@@ -22,6 +22,8 @@
     "progressive delivery",
     "featureops",
     "unleash",
-    "flag audit"
+    "flag audit",
+    "migration",
+    "gitlab"
   ]
 }

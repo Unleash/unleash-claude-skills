@@ -1,10 +1,10 @@
 # FeatureOps — `/unleash:featureops`
 
-A skill in the [Unleash plugin for Claude Code](../../README.md). It brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into Claude Code: evaluate changes for risk, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags.
+A skill in the [Unleash plugin for Claude Code](https://github.com/Unleash/unleash-claude-skills). It brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into Claude Code: evaluate changes for risk, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags.
 
 This skill ships as a **customizable template**: the defaults work out of the box, but you adapt the reference files to your team's domains and conventions — see [Customize for your team](#customize-for-your-team).
 
-Install it with the plugin (`/plugin install unleash@unleash-marketplace`) or standalone (`cp -r skills/featureops ~/.claude/skills/`). See the [main README](../../README.md#install) for MCP setup and environment variables.
+Install it with the plugin (`/plugin install unleash@unleash-marketplace`) or standalone (`cp -r skills/featureops ~/.claude/skills/`). See the [main README](https://github.com/Unleash/unleash-claude-skills#install) for MCP setup and environment variables.
 
 ## What's inside
 
@@ -36,7 +36,7 @@ Edit these reference files to match your conventions — every customizable spot
 3. **`references/rollout-guidance.md`** — default milestones, hold durations, halt thresholds.
 4. **`references/cleanup-cadence.md`** — stale-flag thresholds.
 5. **`SKILL.md` frontmatter** — add domain-specific keywords to the `description` so the skill activates for your team's vocabulary.
-6. **`../../hooks/evaluate-high-risk-save.example.json`** — the opt-in high-risk-edit hook; set its `if` glob to your high-risk directories (see [`hooks/README.md`](../../hooks/README.md)).
+6. **`hooks/evaluate-high-risk-save.example.json`** (in the plugin repository, not this skill directory) — the opt-in high-risk-edit hook; set its `if` glob to your high-risk directories (see [`hooks/README.md`](https://github.com/Unleash/unleash-claude-skills/blob/main/hooks/README.md)).
 
 Find every customizable spot in this skill:
 
