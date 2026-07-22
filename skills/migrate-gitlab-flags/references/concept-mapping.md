@@ -7,16 +7,16 @@ The translation table applied in Phase 3. Every row of the inventory must map to
 | | GitLab (before) | Unleash v8 (after) |
 |---|---|---|
 | Backend SDKs | project URL + `UNLEASH-INSTANCEID` | `https://<host>/api/` + `Authorization: <backend token>` |
-| Frontend SDKs | impossible (proxy/BFF workarounds) | `/api/frontend` or Unleash Edge + frontend token |
+| Frontend SDKs | impossible (proxy/BFF workarounds) | `/api/frontend` or Unleash Enterprise Edge + frontend token |
 | Environment selection | `appName` string matching | project+environment-scoped token: `{projects}:{environment}.{hash}` |
-| Admin/tooling | GitLab REST API (PAT) | Admin API `/api/admin/...` (PAT / service account — admin tokens are deprecated) |
+| Admin/tooling | GitLab REST API (PAT) | Unleash Admin API `/api/admin/...` (PAT / service account — admin tokens are deprecated) |
 
 ## Project and edition mapping
 
-| GitLab construct | Unleash v8 equivalent |
+| GitLab construct | Unleash OSS | Unleash Enterprise |
 |---|---|
-| GitLab project (shared by many services) | **Enterprise/Cloud**: one Unleash **project per service/application** (separation of concerns, per-project tokens/roles). **OSS**: the single `default` project — agree a collision-avoiding flag prefix with the user if names aren't already distinct |
-| environments (`production`, `staging`, ad-hoc) | first-class environments — but **OSS cannot create environments via the Admin API** (Enterprise feature): map to the environments that exist, and carry strategies for unmappable scopes over disabled, documenting the decision |
+| GitLab project (shared by many services) | The single `default` project — agree a collision-avoiding flag prefix with the user if names aren't already distinct | One Unleash **project per service/application** (separation of concerns, per-project tokens/roles). |
+| environments (`production`, `staging`, ad-hoc) | First-class environments, but **cannot create environments via the Admin API** | Map to the environments that exist, and carry strategies for unmappable scopes over disabled, documenting the decision |
 
 ## Strategy translation
 
@@ -32,7 +32,7 @@ Payload sketches are the strategy body for `POST /api/admin/projects/<project>/f
 | `gradualRolloutUserId` (legacy) | gradual rollout with **userId stickiness** — same murmur3 bucketing, and missing userId evaluates false, matching the legacy anonymous exclusion | `{"name":"flexibleRollout","parameters":{"rollout":"<percentage>","stickiness":"userId","groupId":"default"}}` |
 | `userWithId` (removed in Unleash v7) | gradual rollout 100% + **constraint** `userId IN […]` | `{"name":"flexibleRollout","parameters":{"rollout":"100","stickiness":"default","groupId":"default"},"constraints":[{"contextName":"userId","operator":"IN","values":["alice","zed"]}]}` |
 | `gitlabUserList` | **segment** (reusable, centrally managed) referenced by a 100% rollout strategy | `{"name":"flexibleRollout","parameters":{"rollout":"100","stickiness":"default","groupId":"default"},"segments":[<segmentId>]}` |
-| Unleash Proxy in front of GitLab | delete it — Frontend API or Edge with a frontend token | n/a |
+| Unleash Proxy in front of GitLab | delete it — Frontend API or Unleash Enterprise Edge with a frontend token | n/a |
 | GitLab management REST scripts | Admin API (`/api/admin/projects/<project>/features/...`) | see [provisioning.md](provisioning.md) |
 
 ## Parity-critical details

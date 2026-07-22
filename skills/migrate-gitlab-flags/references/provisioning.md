@@ -2,18 +2,6 @@
 
 Phase 4 reference. The state-parity invariant governs everything here: a flag enabled in GitLab arrives enabled in Unleash, a disabled one arrives disabled, per environment — no exceptions.
 
-## Contents
-
-- [Choose a mechanism (ask the user)](#choose-a-mechanism-ask-the-user)
-- [Project topology](#project-topology)
-- [Token provisioning (least privilege)](#token-provisioning-least-privilege)
-- [Order of operations](#order-of-operations)
-- [Mechanism 1 — Unleash MCP server](#mechanism-1--unleash-mcp-server)
-- [Mechanism 2 — import files](#mechanism-2--import-files)
-- [Mechanism 3 — direct Admin API](#mechanism-3--direct-admin-api)
-- [Idempotency (API/MCP paths)](#idempotency-apimcp-paths)
-- [Related](#related)
-
 ## Choose a mechanism (ask the user)
 
 Three ways to get definitions onto the server — they differ mainly in the access the *migration* needs. **First check whether an Unleash MCP server is already connected to this session** (tools prefixed `mcp__unleash__` or `mcp__plugin_unleash_mcp__` — the latter comes bundled with the Unleash plugin for Claude Code and is registered automatically on plugin installs; `claude mcp list` shows standalone entries) — if so, propose MCP as the path. Otherwise ask the user which they prefer; if they have no preference, suggest import files for a governed/production instance and the direct Admin API for a local/dev target.
@@ -33,7 +21,7 @@ Gaps compose: user lists → segments are not manageable via MCP and not carried
 
 ## Token provisioning (least privilege)
 
-Follow https://docs.getunleash.io/concepts/api-tokens-and-client-keys:
+Follow the [official documentation about API tokens and client keys](https://docs.getunleash.io/concepts/api-tokens-and-client-keys):
 
 Naming hint: Unleash docs, source, and SDK repositories often call a **backend token** a **"client" API token** (SDK options like `client keys`), and a **frontend token** a **"frontend"** or **"frontend proxy" API token**. Treat those as aliases when reading errors, UI labels, or SDK docs — and never mix the two up: backend/client tokens must stay server-side; only frontend tokens may reach a browser.
 
@@ -52,7 +40,7 @@ Naming hint: Unleash docs, source, and SDK repositories often call a **backend t
 
 ## Mechanism 1 — Unleash MCP server
 
-Two hosting modes, same tools (https://docs.getunleash.io/integrate/mcp, source: https://github.com/unleash/unleash-mcp). If the session already has the server connected, use it directly — no setup step.
+Two hosting modes, same tools ([documentation](https://docs.getunleash.io/integrate/mcp) and [GitHub Repository](https://github.com/unleash/unleash-mcp)). If the session already has the server connected, use it directly — no setup step.
 
 - **Local**: `npx -y @unleash/mcp@latest` with `UNLEASH_BASE_URL` + `UNLEASH_PAT` env vars (Claude Code: `claude mcp add unleash --env … -- npx -y @unleash/mcp@latest`). Optional `UNLEASH_DEFAULT_PROJECT`; `--dry-run` for a rehearsal pass.
 - **Remote** (Enterprise): the instance itself serves `https://<instance-url>/api/admin/mcp` once enabled (Admin settings → Remote MCP server). Authenticate **either** via OAuth 2.0 Dynamic Client Registration — the browser flow exchanges the login session for a 24-hour PAT, and the org must permit DCR self-registration — **or** by supplying a PAT directly. No local install; fits orgs that centralize access control.
@@ -74,7 +62,7 @@ Not covered — route around: segments (create via UI/Admin API before strategie
 
 ## Mechanism 2 — import files
 
-Unleash import/export (https://docs.getunleash.io/concepts/import-export) works per **project + environment**: an import file carries flags, tags, dependencies, strategies (with constraints and segment *references*), strategy variants, and per-environment flag status.
+Unleash [import/export functionality](https://docs.getunleash.io/concepts/import-export) works per **project + environment**: an import file carries flags, tags, dependencies, strategies (with constraints and segment *references*), strategy variants, and per-environment flag status.
 
 Workflow:
 

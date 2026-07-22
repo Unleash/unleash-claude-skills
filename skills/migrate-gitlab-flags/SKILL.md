@@ -7,16 +7,16 @@ disable-model-invocation: true
 allowed-tools: mcp__unleash__list_projects mcp__unleash__list_flags mcp__unleash__detect_flag mcp__unleash__get_flag_state mcp__plugin_unleash_mcp__list_projects mcp__plugin_unleash_mcp__list_flags mcp__plugin_unleash_mcp__detect_flag mcp__plugin_unleash_mcp__get_flag_state
 ---
 
-# GitLab Feature Flags → Unleash v8 migration
+# Migrate GitLab Feature Flags to Unleash (v8+)
 
-Migrate one app or service off GitLab's Unleash-compatible legacy flag API onto a real Unleash v8 server: recreate the flag definitions, rewrite the SDK wiring, and prove behavior parity. There is no official GitLab→Unleash importer — recreating definitions is always part of the job.
+Migrate one app or service off GitLab's Unleash-compatible legacy flag API onto a real Unleash v8 server: recreate the flag definitions, rewrite the SDK wiring, and prove behavior parity. There is no automated import/export mechanism from GitLab to Unleash, therefore recreating definitions is always part of the job.
 
 ## Non-negotiable invariants
 
 - **State carries over exactly.** A flag enabled in GitLab is enabled in Unleash; a disabled flag arrives disabled (per environment). Always — never ship flags "off for safety" or "on for convenience".
 - **Flag names are unchanged** (the only exception: a collision prefix agreed with the user when sharing an OSS `default` project — see Inputs step 3).
 - **Minimal code diff.** Mirror the existing patterns; the migration is not a refactoring opportunity (see Phase 5).
-- **Least-privilege credentials.** The app gets a backend/frontend token scoped to its project + environment; the migration itself uses only the access level its provisioning mechanism requires. Never assume an admin token (admin tokens are deprecated by Unleash anyway — automation uses personal access tokens or service accounts).
+- **Least-privilege credentials.** The app gets an Unleash backend/frontend token scoped to its project + environment; the migration itself uses only the access level its provisioning mechanism requires. Never assume an admin token (admin tokens are deprecated by Unleash anyway, so automation uses personal access tokens or service accounts).
 
 ## Inputs
 
@@ -68,11 +68,11 @@ Recreate flags, strategies, and segments through the mechanism chosen in Inputs 
 
 Swap the SDK wiring per [references/sdk-cheatsheet.md](references/sdk-cheatsheet.md), keeping the diff minimal — same files, same patterns, same abstraction:
 
-- URL: GitLab project endpoint → `https://<host>/api` (backend) or `<host>/api/frontend` (browser).
+- URL: GitLab project endpoint becomes `https://<host>/api` (backend) or `<host>/api/frontend` (browser).
 - Auth: drop every instance-id knob; send `Authorization: <token>` instead — the app's project+environment-scoped backend token server-side, a frontend token in browsers.
 - Environments: drop appName-as-environment — tokens are environment-scoped; appName goes back to naming the application.
 - Modernize SDKs pinned only for instance-id auth (e.g. `no.finn.unleash` → `io.getunleash`, Node `unleash-client` ≤5 → current, Go module rename).
-- Preserve the app's abstraction style: a wrapper stays a wrapper, a port/adapter migration lands in the adapter, DI registration stays DI, OpenFeature call sites don't change. Direct SDK calls stay direct — do NOT introduce an abstraction layer the code didn't have. If one would clearly pay off, *recommend* it in the final report (Unleash's own guidance: https://docs.getunleash.io/guides/manage-feature-flags-in-code#use-an-abstraction-layer) as follow-up work — never bundle it into the migration.
+- Preserve the app's abstraction style: a wrapper stays a wrapper, a port/adapter migration lands in the adapter, DI registration stays DI, OpenFeature call sites don't change. Direct SDK calls stay direct — do NOT introduce an abstraction layer the code didn't have. If one would clearly pay off, *recommend* it in the final report based on [Unleash's own guidance](https://docs.getunleash.io/guides/manage-feature-flags-in-code#use-an-abstraction-layer), as follow-up work — never bundle it into the migration.
 - Keep flag names, response shapes, and public behavior unchanged.
 
 ## Phase 6 — Verify
@@ -81,7 +81,7 @@ Follow the gate checklist in [references/verification.md](references/verificatio
 
 ## Special cases
 
-- **Frontend apps behind Unleash Proxy**: delete the proxy container and its secrets; point the browser SDK at `/api/frontend` with a **frontend** token (a client token in a browser is a secret leak). Edge replaces the proxy for high-traffic setups.
+- **Frontend apps behind Unleash Proxy**: delete the proxy container and its secrets; point the browser SDK at `/api/frontend` with a **frontend** token (a client token in a browser is a secret leak). Unleash Enterprise Edge replaces the proxy for high-traffic setups.
 - **BFF frontends**: keep the BFF and its JSON contract byte-compatible; only the server-side SDK config changes.
 - **OpenFeature providers**: rewrite the provider internals (or swap in an official provider with identical context mapping); evaluation call sites must not change, and fallback semantics (serve-default on timeout) must survive.
 - **Ops/REST tooling**: scripts hitting the GitLab management REST API move to the Unleash Admin API, preserving each script's CLI contract; the global `active` bit becomes per-environment on/off — decide and document which environment(s) each script targets.

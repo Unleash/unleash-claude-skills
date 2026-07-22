@@ -2,20 +2,9 @@
 
 How GitLab serves feature flags over its Unleash-compatible legacy client API, and the traps that shaped the code you are about to migrate. Wire behavior notes were verified against GitLab.com.
 
-## Contents
-
-- [API model](#api-model)
-- [Wire strategies](#wire-strategies)
-- [SDK instance-id trap table](#sdk-instance-id-trap-table)
-- [Wire behavior gotchas](#wire-behavior-gotchas)
-- [Backup-file collision hazard](#backup-file-collision-hazard)
-- [Management REST API](#management-rest-api)
-- [Limits](#limits)
-- [Related](#related)
-
 ## API model
 
-GitLab implements a **legacy Unleash client API** per project — and nothing else. No frontend API, no admin API, no Edge.
+GitLab implements a **legacy Unleash client API** per project — and nothing else. No frontend API, no admin API, no Unleash Enterprise Edge.
 
 ```
 API URL   https://gitlab.com/api/v4/feature_flags/unleash/<project_id>
@@ -46,17 +35,17 @@ Not supported by GitLab: variants, segments, custom context fields, custom strat
 
 ## SDK instance-id trap table
 
-The Unleash SDK v6 generation removed the user-settable `instanceId` (it is auto-generated now), and GitLab authenticates on that exact value → **401**. Apps stuck on GitLab therefore pin old SDK versions or inject the header manually. Recognize the pattern during discovery instead of "fixing" it — removing the pin is a Phase 5 (Rewrite) action.
+The Unleash SDK v6 generation removed the user-settable `instanceId` (it is auto-generated now), and GitLab authenticates on that exact value (otherwise it's a **401** response). Therefore GitLab-based apps need to pin old SDK versions or inject the header manually. Recognize the pattern during discovery instead of "fixing" it — removing the pin is a Phase 5 (Rewrite) action.
 
 | SDK | GitLab-safe | Notes |
 |---|---|---|
 | Node `unleash-client` | ≤ 5.x | 6.x works only via `customHeaders: {"UNLEASH-INSTANCEID": …}` |
-| Go `unleash-client-go` | v3 and v4 | v5+ renamed the module to `unleash-go-sdk` |
-| Ruby gem `unleash` | 5.x line | instance-id removal tracked upstream (PR #179) |
-| Java | any (`.instanceId()` kept) | but groupId/package renamed `no.finn.unleash` → `io.getunleash` at 5.0 |
+| Go `unleash-client-go` | v3 and v4 | [v5+](https://github.com/Unleash/unleash-go-sdk/releases/tag/v5.0.3) renamed the module to `unleash-go-sdk` in August 2025 |
+| Ruby gem `unleash` | 5.x line | instance-id removal tracked upstream ([PR #179](https://github.com/Unleash/unleash-ruby-sdk/pull/179) form July 2024) |
+| Java | any (`.instanceId()` kept) | but groupId/package renamed `no.finn.unleash` → `io.getunleash` at [5.0](https://github.com/Unleash/unleash-java-sdk/releases/tag/unleash-client-java-5.0.0) in October 2021 |
 | Python `UnleashClient` | **all versions** | kept `instance_id` — easiest to miss during rewrite |
 | PHP `unleash/client` | current | `->withInstanceId(...)` |
-| .NET `Unleash.Client` | current | `InstanceTag`; removal tracked upstream (PR #226) |
+| .NET `Unleash.Client` | current | `InstanceTag`; removal tracked upstream ([PR #226](https://github.com/Unleash/unleash-dotnet-sdk/pull/226) from July 2024) |
 | Unleash Proxy | **1.4.0 only** | 1.4.1+ bundles client v6 → 401 |
 
 ## Wire behavior gotchas
@@ -81,7 +70,7 @@ PAT-authenticated (`PRIVATE-TOKEN: <token>` header) against `https://gitlab.com/
 
 ## Limits
 
-Flags per project on GitLab.com: Free 50, Premium 150, Ultimate 200. The flag-serving endpoint counts against unauthenticated per-IP rate limits — the reason GitLab recommends fronting production with the Unleash Proxy.
+Flags per project on GitLab: Free 50, Premium 150, Ultimate 200. The flag-serving endpoint counts against unauthenticated per-IP rate limits, which is the reason GitLab recommends fronting production with the Unleash Proxy.
 
 ## Related
 
