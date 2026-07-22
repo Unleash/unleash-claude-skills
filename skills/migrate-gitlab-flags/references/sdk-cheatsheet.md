@@ -12,23 +12,6 @@ These apply to every backend section below; sections only note deviations.
 - **Keep** refresh/metrics intervals, event handlers, health-check wiring, and the app's abstraction style exactly as they were.
 - **Env hygiene**: the app must configure itself from `UNLEASH_URL` + `UNLEASH_CLIENT_TOKEN` (and `UNLEASH_FRONTEND_TOKEN` where applicable) with every `GITLAB_*` variable unset.
 
-## Contents
-
-- [Node — direct (`unleash-client`)](#node--direct-unleash-client)
-- [Node — OpenFeature provider](#node--openfeature-provider)
-- [Browser — SPA behind Unleash Proxy](#browser--spa-behind-unleash-proxy)
-- [Browser — BFF pattern](#browser--bff-pattern)
-- [Next.js — SSR (`@unleash/nextjs`)](#nextjs--ssr-unleashnextjs)
-- [Python (`UnleashClient`)](#python-unleashclient)
-- [Go — direct (`unleash-client-go`)](#go--direct-unleash-client-go)
-- [Go — OpenFeature provider](#go--openfeature-provider)
-- [Ruby (`unleash` gem)](#ruby-unleash-gem)
-- [Java (`no.finn.unleash` → `io.getunleash`)](#java-nofinnunleash--iogetunleash)
-- [PHP (`unleash/client`)](#php-unleashclient)
-- [.NET (`Unleash.Client`)](#net-unleashclient)
-- [Shell / REST ops scripts](#shell--rest-ops-scripts)
-- [Related](#related)
-
 ## Node — direct (`unleash-client`)
 
 **Before** — v5 pin (`instanceId` option) or v6 with the header hack:
