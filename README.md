@@ -11,6 +11,7 @@ All skills install together under the `unleash` plugin, are invoked as `/unleash
 | Skill | Invoke | What it does |
 |---|---|---|
 | **[`featureops`](skills/featureops/)** | `/unleash:featureops` | Evaluate a change for risk, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags. |
+| **[`migrate-gitlab-flags`](skills/migrate-gitlab-flags/)** | `/unleash:migrate-gitlab-flags <app-dir>` | Migrate a codebase from GitLab Feature Flags to an Unleash server: inventory, concept mapping, provisioning, SDK rewrite, behavior-parity verification. Manual invocation only — it never auto-triggers. |
 
 More skills are on the way — see [Add a new skill](#add-a-new-skill).
 
@@ -34,6 +35,8 @@ Installs the whole `unleash` plugin (every skill) and auto-registers the Unleash
 ```
 
 Then set your environment variables (below) and restart Claude Code or run `/reload-plugins`.
+
+> **Version pinning:** the bundled config runs `@unleash/mcp@latest` via `npx`, so every session resolves the newest release. If your org requires vetted or reproducible dependencies, pin a version in `.mcp.json` (e.g. `@unleash/mcp@0.4.1`) and update it deliberately.
 
 ### Option B — Install a single skill standalone
 
@@ -96,6 +99,7 @@ Once installed, a skill activates automatically when relevant, or you invoke it 
 Each skill documents its own workflow, prompts, and customization in its README:
 
 - **[`featureops`](skills/featureops/README.md)** — feature-flag lifecycle: risk evaluation, creation, wrapping, rollout, cleanup.
+- **[`migrate-gitlab-flags`](skills/migrate-gitlab-flags/README.md)** — GitLab→Unleash feature flags migration: inventory, mapping, provisioning, SDK rewrite, parity verification. During a migration its parity rules take precedence over `featureops` conventions; afterwards `featureops` governs the migrated flags.
 
 ## Add a new skill
 
@@ -115,8 +119,8 @@ The plugin auto-discovers every skill under `skills/` (the marketplace entry sca
 
 | Path | Purpose |
 |---|---|
-| `skills/<name>/` | One directory per skill: `SKILL.md`, `references/`, `README.md`. |
-| `.mcp.json` | Bundled Unleash MCP server config (local stdio via `npx`), server key `mcp`. Auto-registered on plugin install. |
+| `skills/<name>/` | One directory per skill: `SKILL.md`, `references/`, `README.md`, and optionally `scripts/` and `evals/`. |
+| `.mcp.json` | Bundled Unleash MCP server config (local stdio via `npx`), server key `mcp`. Auto-registered on plugin install. The key is deliberate: it produces the plugin tool prefix `mcp__plugin_unleash_mcp__*` that every skill's `allowed-tools` pre-approves — renaming it silently disables those pre-approvals. |
 | `examples/mcp.remote.json` | Remote HTTP transport alternative. |
 | `hooks/` | Optional, opt-in `PostToolUse` example hook + docs. Not loaded automatically. |
 | `.claude-plugin/plugin.json` | Plugin manifest. |

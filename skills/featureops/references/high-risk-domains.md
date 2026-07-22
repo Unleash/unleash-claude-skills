@@ -127,4 +127,4 @@ All flags in this domain start with `auth-`. Examples: `auth-sso-google`, `auth-
 
 - For naming and types: `feature-flag-conventions.md`
 - For rollout milestones: `rollout-guidance.md` (this file overrides for high-risk domains)
-- For automating evaluation on edit: `../../../hooks/README.md` (optional, opt-in PostToolUse hook)
+- For automating evaluation on edit: the opt-in PostToolUse hook in the plugin repository's `hooks/` directory (https://github.com/Unleash/unleash-claude-skills/tree/main/hooks — not shipped inside this skill directory)

@@ -5,14 +5,14 @@
     "email": "support@getunleash.io"
   },
   "metadata": {
-    "description": "Unleash FeatureOps template for Claude Code",
-    "version": "1.0.0"
+    "description": "Unleash feature management skills for Claude Code",
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "unleash",
       "source": "./",
-      "description": "Manage Unleash feature flags from Claude Code: evaluate whether a change needs a flag, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags. Bundles the Unleash MCP server and a customizable FeatureOps skill.",
+      "description": "Manage Unleash feature flags from Claude Code: evaluate whether a change needs a flag, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, clean up stale flags, and migrate flags from GitLab to Unleash. Bundles the Unleash MCP server, a customizable FeatureOps skill, and a GitLab migration skill.",
       "skills": [
         "./skills/"
       ]

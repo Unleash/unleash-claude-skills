@@ -13,7 +13,7 @@ The defaults work out of the box, but feature management conventions vary across
 
 ## Setup check
 
-This skill needs the Unleash MCP server connected. When installed as a Claude Code plugin, the server is registered automatically from the bundled `.mcp.json`; you only need to set three environment variables in the shell that launches Claude Code (or use the remote MCP server — see `examples/README.md` for details):
+This skill needs the Unleash MCP server connected. When installed as a Claude Code plugin, the server is registered automatically from the bundled `.mcp.json`; you only need to set three environment variables in the shell that launches Claude Code (or use the remote MCP server — see `examples/README.md` in the plugin repository, https://github.com/Unleash/unleash-claude-skills, for details):
 
 ```bash
 export UNLEASH_BASE_URL=https://your-instance.getunleash.io/api
@@ -21,9 +21,9 @@ export UNLEASH_PAT=your-personal-access-token
 export UNLEASH_DEFAULT_PROJECT=default   # optional; defaults to "default"
 ```
 
-If the Unleash tools are not available, tell the user to complete setup (see the repository README for full install, transport, and credential instructions) and stop rather than guessing flag state.
+If the Unleash tools are not available, tell the user to complete setup (see the README at https://github.com/Unleash/unleash-claude-skills for full install, transport, and credential instructions) and stop rather than guessing flag state.
 
-> **Tool naming note:** the read-only tools are pre-approved via `allowed-tools` under two names each: `mcp__unleash__*` (standalone-skill install, where you register the server under the key `unleash`) and `mcp__plugin_unleash_mcp__*` (plugin install, where Claude Code namespaces the bundled server — keyed `mcp` in `.mcp.json` — as `mcp__plugin_<plugin>_<server>__<tool>` → `mcp__plugin_unleash_mcp__<tool>`, verified on a real install). Pre-approval only applies while this skill is active; a read-only tool invoked before the skill has loaded will still prompt once. Write operations (`create_flag`, `set_flag_rollout`, `toggle_flag_environment`, `remove_flag_strategy`, `cleanup_flag`) are **never** pre-approved — always let the user confirm them.
+> **Tool naming note:** the read-only tools are pre-approved via `allowed-tools` under two names each: `mcp__unleash__*` (standalone-skill install, where you register the server under the key `unleash`) and `mcp__plugin_unleash_mcp__*` (plugin install, where Claude Code namespaces the bundled server — keyed `mcp` in `.mcp.json` — as `mcp__plugin_<plugin>_<server>__<tool>` → `mcp__plugin_unleash_mcp__<tool>`, verified on a real install). Pre-approval only applies while this skill is active; a read-only tool invoked before the skill has loaded will still prompt once. Write operations (`create_flag`, `set_flag_rollout`, `toggle_flag_environment`, `remove_flag_strategy`) are **never** pre-approved — always let the user confirm them. `wrap_change` and `cleanup_flag` don't mutate server state (they return guard code and removal instructions), but they are deliberately not pre-approved either: each immediately precedes edits to production code paths, so the confirmation prompt stays.
 
 ## When to load the reference files
 
@@ -49,6 +49,10 @@ For a change that might need a flag, follow this sequence. The reference files h
 
 Do not auto-execute write operations. Present the plan, get confirmation, then act — especially for flag creation, rollout changes, and cleanup, which touch production code paths.
 
+## Migrations are a different workflow
+
+When the task is migrating existing flags from another system (e.g. GitLab feature flags) into Unleash, defer to the `migrate-gitlab-flags` skill (`/unleash:migrate-gitlab-flags`) and do **not** apply this skill's conventions to the migrated flags — migration parity rules win: flag names carry over unchanged (never renamed to `{domain}-{feature}-{variant}`), state carries over exactly (no `evaluate_change` gate, no default rollout milestones), and strategy parameters such as `groupId` are preserved verbatim. This skill's conventions govern new flags, and they resume governing migrated flags once the migration completes.
+
 ## Tool reference
 
 The Unleash MCP server exposes the following tools.
@@ -67,7 +71,7 @@ The Unleash MCP server exposes the following tools.
 | `remove_flag_strategy` | Deletes a rollout strategy from a flag. | Simplifying flag configuration |
 | `cleanup_flag` | Returns file locations and instructions for removing a flag after rollout. | After full rollout |
 
-The read-only tools — `evaluate_change`, `detect_flag`, `get_flag_state`, `list_projects`, `list_flags` — are pre-approved via `allowed-tools`. Write operations always require explicit user approval; keep it that way unless the user has a specific reason to lower the bar. Use `list_projects` and `list_flags` for inventory discovery before creating new flags; `list_flags` (active + archived) is also the basis of the flag audit workflow in `references/cleanup-cadence.md`.
+The read-only tools — `evaluate_change`, `detect_flag`, `get_flag_state`, `list_projects`, `list_flags` — are pre-approved via `allowed-tools`. Every other tool prompts for approval — the write operations because they mutate server state, and `wrap_change`/`cleanup_flag` because their output immediately precedes code edits. Keep it that way unless the user has a specific reason to lower the bar. Use `list_projects` and `list_flags` for inventory discovery before creating new flags; `list_flags` (active + archived) is also the basis of the flag audit workflow in `references/cleanup-cadence.md`.
 
 ## Customize this skill for your team
 
