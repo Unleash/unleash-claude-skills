@@ -12,7 +12,7 @@ Three ways to get definitions onto the server — they differ mainly in the acce
 | **Import files** | **none** — the AI only generates JSON; a human (or CI) applies it | flags, strategies, variants, tags, per-env status — **segments only by reference** | governed instances where an AI assistant must not hold API credentials; change-request workflows |
 | **Direct Admin API** | a service account token or PAT with project permissions (admin tokens are deprecated) | everything: projects, segments, flags, strategies, tokens | local/dev targets, or automation that is explicitly authorized |
 
-Gaps compose: user lists → segments are not manageable via MCP and not carried by import files, so those two mechanisms are hybrids — the segment itself is created via the UI (by the user) or the Admin API (if authorized), and everything else flows through the chosen mechanism.
+Gaps compose: migration of user lists to segments is not manageable via MCP and not carried by import files, so those two mechanisms are hybrids - the segment itself is created via the UI (by the user) or the Admin API (if authorized), and everything else flows through the chosen mechanism. The same applies when creating new projects during migration to Unleash Enterprise - it is not managed via MCP and not carried by import files (they are generated per project), so the project itself is created via the UI (by the user) or the Admin API (if authorized), and everything else flows through the chosen mechanism.
 
 ## Project topology
 
