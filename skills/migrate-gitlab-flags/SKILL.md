@@ -1,6 +1,6 @@
 ---
 name: migrate-gitlab-flags
-description: Migrates a codebase from GitLab Feature Flags (the Unleash-compatible legacy API authenticated with UNLEASH-INSTANCEID) to a modern Unleash v8 server. Inventories flags and strategies, maps GitLab constructs to Unleash equivalents (default strategy → 100% gradual rollout, userWithId → constraint, user lists → segments, environment scopes → first-class environments), provisions flags via the user's chosen mechanism (Unleash MCP server, import files, or direct Admin API), rewrites SDK configuration with minimal code changes, and verifies behavior parity. Use when asked to migrate off GitLab feature flags, move flags to Unleash, or port GitLab flag definitions to an Unleash server.
+description: Migrates a codebase from GitLab Feature Flags (the Unleash-compatible legacy API authenticated with UNLEASH-INSTANCEID) to a modern Unleash v8 server. Inventories flags and strategies, maps GitLab constructs to Unleash equivalents, provisions flags via multiple mechanisms (Unleash MCP server, import files, or direct Admin API), rewrites SDK configuration with minimal code changes, and verifies behavior parity. Use when asked to migrate off GitLab feature flags, move flags to Unleash, or port GitLab flag definitions to an Unleash server.
 license: Apache-2.0
 argument-hint: [path-to-app-or-repo]
 disable-model-invocation: true
