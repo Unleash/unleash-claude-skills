@@ -58,6 +58,17 @@ claude mcp add unleash -- npx -y @unleash/mcp@latest --log-level error
 
 Unleash's official [Claude Code integration guide](https://docs.getunleash.io/integrate/claude-code) shows the full command (with `-e` env flags and `--scope`) if you prefer to pass credentials inline.
 
+### Option C — via the skills.sh CLI (any agent)
+
+The skills are also installable with [Vercel's `skills` CLI](https://skills.sh), which targets Claude Code and 70+ other agents straight from this repo:
+
+```bash
+npx skills add Unleash/unleash-claude-skills                     # choose skills interactively
+npx skills add Unleash/unleash-claude-skills --skill featureops  # a specific skill
+```
+
+This copies the skill *files* into your agent — it does **not** set up the Unleash MCP server. Add that yourself (see [Environment variables](#environment-variables-shared-by-all-skills) and the `claude mcp add unleash` command above) so the MCP-backed tools work. `migrate-gitlab-flags` can also run through its import-file or Admin-API paths without MCP.
+
 ### Environment variables (shared by all skills)
 
 Claude Code's `.mcp.json` expansion supports `${VAR}` and the default form `${VAR:-default}` (the config uses `${UNLEASH_DEFAULT_PROJECT:-default}` so the project falls back to `default` when unset). Set:
