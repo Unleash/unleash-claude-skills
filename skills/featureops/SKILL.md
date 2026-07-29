@@ -1,6 +1,6 @@
 ---
 name: featureops
-description: Manage feature flags with Unleash — evaluate whether a code change needs a flag, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags. Use when working with feature flags, feature toggles, rollouts, releases, experiments, kill-switches, canary deploys, or the Unleash MCP server. Ships as a customizable FeatureOps template — adapt the reference files to your team's conventions.
+description: Manage feature flags with Unleash — evaluate whether a code change needs a flag, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags. Use when working with feature flags, feature toggles, rollouts, releases, experiments, kill-switches, canary deploys, or the Unleash MCP server. Ships as a customizable FeatureOps template — set your team's policy in an override file (`.claude/unleash-featureops.md`); no need to edit the skill.
 license: Apache-2.0
 allowed-tools: mcp__unleash__evaluate_change mcp__unleash__detect_flag mcp__unleash__get_flag_state mcp__unleash__list_projects mcp__unleash__list_flags mcp__plugin_unleash_mcp__evaluate_change mcp__plugin_unleash_mcp__detect_flag mcp__plugin_unleash_mcp__get_flag_state mcp__plugin_unleash_mcp__list_projects mcp__plugin_unleash_mcp__list_flags
 ---
@@ -9,7 +9,7 @@ allowed-tools: mcp__unleash__evaluate_change mcp__unleash__detect_flag mcp__unle
 
 This skill brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into Claude Code. It drives the [Unleash MCP server](https://github.com/Unleash/unleash-mcp) to evaluate changes for risk, create flags with consistent naming, generate SDK guard code, manage rollouts, and clean up stale flags.
 
-The defaults work out of the box, but feature management conventions vary across teams and industries. This skill ships as a **customizable template**: adapt the reference files under `references/` to your team's domains and conventions, then commit and share it.
+The defaults work out of the box, but feature-management conventions vary across teams and industries. This skill ships as a **customizable template**: every tunable value lives in one policy file, which you override per project *without editing the skill* — see [Active policy](#active-policy) and [Customize for your team](#customize-for-your-team).
 
 ## Setup check
 
@@ -24,6 +24,18 @@ export UNLEASH_DEFAULT_PROJECT=default   # optional; defaults to "default"
 If the Unleash tools are not available, tell the user to complete setup (see the README at https://github.com/Unleash/unleash-claude-skills for full install, transport, and credential instructions) and stop rather than guessing flag state.
 
 > **Tool naming note:** the read-only tools are pre-approved via `allowed-tools` under two names each: `mcp__unleash__*` (standalone-skill install, where you register the server under the key `unleash`) and `mcp__plugin_unleash_mcp__*` (plugin install, where Claude Code namespaces the bundled server — keyed `mcp` in `.mcp.json` — as `mcp__plugin_<plugin>_<server>__<tool>` → `mcp__plugin_unleash_mcp__<tool>`, verified on a real install). Pre-approval only applies while this skill is active; a read-only tool invoked before the skill has loaded will still prompt once. Write operations (`create_flag`, `set_flag_rollout`, `toggle_flag_environment`, `remove_flag_strategy`) are **never** pre-approved — always let the user confirm them. `wrap_change` and `cleanup_flag` don't mutate server state (they return guard code and removal instructions), but they are deliberately not pre-approved either: each immediately precedes edits to production code paths, so the confirmation prompt stays.
+
+## Active policy
+
+Every tunable value — naming convention, flag types and lifetimes, rollout milestones and holds, halt thresholds, staleness windows, and the high-risk domains — comes from the **active policy**. The reference files describe *how* to apply these values and never restate the numbers, so always resolve them from here.
+
+**Precedence, highest first: project override → user override → shipped defaults.** For each value, use the highest layer that sets it; anything unset falls through to the defaults. The project override and the defaults are inlined below at load time. If a user override exists (`~/.claude/unleash-featureops.md`), read it with your Read tool and slot it *between* them.
+
+**Project override** — `${CLAUDE_PROJECT_DIR}/.claude/unleash-featureops.md` (repo-specific; wins):
+!`cat "${CLAUDE_PROJECT_DIR}/.claude/unleash-featureops.md" 2>/dev/null || echo "(no project override — using user override and/or the defaults below)"`
+
+**Shipped defaults** — `references/policy-defaults.md`:
+!`cat "${CLAUDE_SKILL_DIR}/references/policy-defaults.md" 2>/dev/null || echo "(defaults file not found; load references/policy-defaults.md manually)"`
 
 ## When to load the reference files
 
@@ -40,9 +52,9 @@ Load the reference file that matches the task. For tasks that span workflows (e.
 
 For a change that might need a flag, follow this sequence. The reference files hold the detailed rules for each step.
 
-1. **Evaluate risk** — call `evaluate_change` with a description of the change before implementing anything risky (payments, auth, data migrations, external integrations, performance-sensitive paths, user-visible behavior changes). See `references/feature-flag-conventions.md` and `references/high-risk-domains.md`.
+1. **Evaluate risk** — call `evaluate_change` with a description of the change before implementing anything in the active policy's flag-required categories (see [Active policy](#active-policy)). See `references/feature-flag-conventions.md` and `references/high-risk-domains.md`.
 2. **Prefer reuse** — call `detect_flag` before creating anything. Reuse a matching flag rather than adding to flag sprawl.
-3. **Create** — if no match exists, call `create_flag` with a name following the team's convention (default `{domain}-{feature}-{variant}`) and the right type (`release`, `experiment`, `operational`, `kill-switch`, `permission`).
+3. **Create** — if no match exists, call `create_flag` with a name following the active policy's naming convention and the right flag type. See `references/feature-flag-conventions.md`.
 4. **Wrap** — call `wrap_change` for SDK-appropriate guard code. Apply it verbatim; keep the fallback branch realistic.
 5. **Roll out** — use `set_flag_rollout` and `toggle_flag_environment` to progress through milestones. See `references/rollout-guidance.md`.
 6. **Clean up** — flags are temporary by design. When a rollout stabilizes or an experiment concludes, remove the flag. See `references/cleanup-cadence.md`.
@@ -73,17 +85,14 @@ The Unleash MCP server exposes the following tools.
 
 The read-only tools — `evaluate_change`, `detect_flag`, `get_flag_state`, `list_projects`, `list_flags` — are pre-approved via `allowed-tools`. Every other tool prompts for approval — the write operations because they mutate server state, and `wrap_change`/`cleanup_flag` because their output immediately precedes code edits. Keep it that way unless the user has a specific reason to lower the bar. Use `list_projects` and `list_flags` for inventory discovery before creating new flags; `list_flags` (active + archived) is also the basis of the flag audit workflow in `references/cleanup-cadence.md`.
 
-## Customize this skill for your team
+## Customize for your team
 
-This skill ships as a template. Edit the reference files before rolling it out broadly:
+Don't edit this skill's files to customize it — in a plugin install they live in a managed cache that a plugin update overwrites. Instead, put your team's policy in an **override file**; the skill reads it automatically (see [Active policy](#active-policy)). `references/policy-defaults.md` lists every tunable value and doubles as the template.
 
-- **High-risk domains** in `references/high-risk-domains.md` — replace the payments example with your own domains (auth, billing, data migrations, public API, etc.). *This is the file you'll edit most.*
-- **Naming convention** in `references/feature-flag-conventions.md` — the default is `{domain}-{feature}-{variant}`; swap for your team's pattern.
-- **Rollout milestones** in `references/rollout-guidance.md` — default is 10% → 50% → 100% with 24–48h holds (24h at 10%, 48h at 50%); adjust for your release cadence.
-- **Cleanup cadence** in `references/cleanup-cadence.md` — default staleness signals are Unleash's `stale` marker, 30 days with no SDK evaluation, and Unleash's per-type lifetimes (release/experiment 40 days, operational 7 days); adjust for your tolerance.
-- **Description keywords** in this file's frontmatter — add domain-specific vocabulary (e.g. "checkout flag", "billing rollout") so the skill activates for your team's terms.
+- **Project (recommended):** create `./.claude/unleash-featureops.md` in the repo and set only the values you want to change — especially your real high-risk domains. It's committed with the repo and wins over everything.
+- **User (optional):** `~/.claude/unleash-featureops.md` for personal cross-repo defaults.
 
-Every customizable spot in the reference files is marked with an HTML comment: `<!-- CUSTOMIZE: ... -->`. From this skill's directory, run `grep -rn CUSTOMIZE references/` to find them all (from the repository root, use `grep -rn CUSTOMIZE skills/`).
+Copy the sections you want to change out of `references/policy-defaults.md`, or just ask Claude: *"set up a FeatureOps policy override for this project."* For company-wide standardization, the heavier alternative is to fork this repo, bake your policy into `policy-defaults.md`, and publish it as your own internal plugin — see the skill README.
 
 ---
 
