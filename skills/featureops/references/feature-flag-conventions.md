@@ -1,6 +1,6 @@
 # Feature flag conventions
 
-Values — the naming convention, the flag types and their expected lifetimes, and which changes require a flag — come from the **active policy** (see the *Active policy* section of `SKILL.md`). This file covers *how* to apply them. Customize by creating `.claude/unleash-featureops.md`, not by editing this file.
+Values — the naming convention, the flag types and their expected lifetimes, and which changes require a flag — come from the **active policy** (see the *Active policy* section of `SKILL.md`). This file covers *how* to apply them. Customize by creating `.unleash/featureops.md`, not by editing this file.
 
 ---
 

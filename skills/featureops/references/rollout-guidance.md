@@ -1,6 +1,6 @@
 # Rollout guidance
 
-The numbers — milestones, hold durations, halt thresholds, environments, and the stricter high-risk override — come from the **active policy** (see the *Active policy* section of `SKILL.md`). This file covers *how* to run a rollout. Customize the numbers via `.claude/unleash-featureops.md`, not by editing this file.
+The numbers — milestones, hold durations, halt thresholds, environments, and the stricter high-risk override — come from the **active policy** (see the *Active policy* section of `SKILL.md`). This file covers *how* to run a rollout. Customize the numbers via `.unleash/featureops.md`, not by editing this file.
 
 ---
 

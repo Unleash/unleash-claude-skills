@@ -1,6 +1,6 @@
 # Cleanup cadence
 
-Thresholds — the no-activity window, per-type expected lifetimes, which types are permanent, the audit cadence, and ownership — come from the **active policy** (see the *Active policy* section of `SKILL.md`). This file covers *how* to decide a flag is stale and *how* to remove it. Customize the thresholds via `.claude/unleash-featureops.md`, not by editing this file.
+Thresholds — the no-activity window, per-type expected lifetimes, which types are permanent, the audit cadence, and ownership — come from the **active policy** (see the *Active policy* section of `SKILL.md`). This file covers *how* to decide a flag is stale and *how* to remove it. Customize the thresholds via `.unleash/featureops.md`, not by editing this file.
 
 ---
 

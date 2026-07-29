@@ -1,6 +1,6 @@
 ---
 name: featureops
-description: Manage feature flags with Unleash — evaluate whether a code change needs a flag, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags. Use when working with feature flags, feature toggles, rollouts, releases, experiments, kill-switches, canary deploys, or the Unleash MCP server. Ships as a customizable FeatureOps template — set your team's policy in an override file (`.claude/unleash-featureops.md`); no need to edit the skill.
+description: Manage feature flags with Unleash — evaluate whether a code change needs a flag, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags. Use when working with feature flags, feature toggles, rollouts, releases, experiments, kill-switches, canary deploys, or the Unleash MCP server. Ships as a customizable FeatureOps template — set your team's policy in an override file (`.unleash/featureops.md`); no need to edit the skill.
 license: Apache-2.0
 allowed-tools: mcp__unleash__evaluate_change mcp__unleash__detect_flag mcp__unleash__get_flag_state mcp__unleash__list_projects mcp__unleash__list_flags mcp__plugin_unleash_mcp__evaluate_change mcp__plugin_unleash_mcp__detect_flag mcp__plugin_unleash_mcp__get_flag_state mcp__plugin_unleash_mcp__list_projects mcp__plugin_unleash_mcp__list_flags
 ---
@@ -29,10 +29,10 @@ If the Unleash tools are not available, tell the user to complete setup (see the
 
 Every tunable value — naming convention, flag types and lifetimes, rollout milestones and holds, halt thresholds, staleness windows, and the high-risk domains — comes from the **active policy**. The reference files describe *how* to apply these values and never restate the numbers, so always resolve them from here.
 
-**Precedence, highest first: project override → user override → shipped defaults.** For each value, use the highest layer that sets it; anything unset falls through to the defaults. The project override and the defaults are inlined below at load time. If a user override exists (`~/.claude/unleash-featureops.md`), read it with your Read tool and slot it *between* them.
+**Precedence, highest first: project override → user override → shipped defaults.** For each value, use the highest layer that sets it; anything unset falls through to the defaults. The project override and the defaults are inlined below at load time. If a user override exists (`~/.unleash/featureops.md`), read it with your Read tool and slot it *between* them.
 
-**Project override** — `${CLAUDE_PROJECT_DIR}/.claude/unleash-featureops.md` (repo-specific; wins):
-!`cat "${CLAUDE_PROJECT_DIR}/.claude/unleash-featureops.md" 2>/dev/null || echo "(no project override — using user override and/or the defaults below)"`
+**Project override** — `${CLAUDE_PROJECT_DIR}/.unleash/featureops.md` (repo-specific; wins):
+!`cat "${CLAUDE_PROJECT_DIR}/.unleash/featureops.md" 2>/dev/null || echo "(no project override — using user override and/or the defaults below)"`
 
 **Shipped defaults** — `references/policy-defaults.md`:
 !`cat "${CLAUDE_SKILL_DIR}/references/policy-defaults.md" 2>/dev/null || echo "(defaults file not found; load references/policy-defaults.md manually)"`
@@ -89,8 +89,8 @@ The read-only tools — `evaluate_change`, `detect_flag`, `get_flag_state`, `lis
 
 Don't edit this skill's files to customize it — in a plugin install they live in a managed cache that a plugin update overwrites. Instead, put your team's policy in an **override file**; the skill reads it automatically (see [Active policy](#active-policy)). `references/policy-defaults.md` lists every tunable value and doubles as the template.
 
-- **Project (recommended):** create `./.claude/unleash-featureops.md` in the repo and set only the values you want to change — especially your real high-risk domains. It's committed with the repo and wins over everything.
-- **User (optional):** `~/.claude/unleash-featureops.md` for personal cross-repo defaults.
+- **Project (recommended):** create `./.unleash/featureops.md` in the repo and set only the values you want to change — especially your real high-risk domains. It's committed with the repo and wins over everything.
+- **User (optional):** `~/.unleash/featureops.md` for personal cross-repo defaults.
 
 Copy the sections you want to change out of `references/policy-defaults.md`, or just ask Claude: *"set up a FeatureOps policy override for this project."* For company-wide standardization, the heavier alternative is to fork this repo, bake your policy into `policy-defaults.md`, and publish it as your own internal plugin — see the skill README.
 

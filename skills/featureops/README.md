@@ -32,8 +32,8 @@ The five read-only tools (`evaluate_change`, `detect_flag`, `get_flag_state`, `l
 
 Don't edit the skill's files — in a plugin install they live in a managed cache that a plugin update overwrites. Instead, put your team's policy in an **override file**; the skill loads it automatically (see the *Active policy* section of `SKILL.md`) and it survives updates.
 
-- **Project override (recommended)** — create `./.claude/unleash-featureops.md` in your repo and set only the values you want to change, especially your real high-risk domains. It's committed with the repo and wins over everything.
-- **User override (optional)** — `~/.claude/unleash-featureops.md` for personal cross-repo defaults.
+- **Project override (recommended)** — create `./.unleash/featureops.md` in your repo and set only the values you want to change, especially your real high-risk domains. It's committed with the repo and wins over everything.
+- **User override (optional)** — `~/.unleash/featureops.md` for personal cross-repo defaults.
 
 Precedence: **project → user → shipped defaults**. [`references/policy-defaults.md`](references/policy-defaults.md) lists every value and doubles as the template — copy the sections you want to change. Or just ask Claude: *"set up a FeatureOps policy override for this project."*
 

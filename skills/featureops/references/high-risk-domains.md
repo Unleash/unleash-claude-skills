@@ -1,6 +1,6 @@
 # High-risk domains
 
-The domain policies themselves — each domain's scope globs, default flag type, naming prefix, required actions, and any rollout override — are defined in the **active policy** (see the *Active policy* section of `SKILL.md`; `references/policy-defaults.md` shows the shape and ships a worked `payments` example). Add or edit domains in your `.claude/unleash-featureops.md` override, not here. This file covers *how* to apply a matching domain policy.
+The domain policies themselves — each domain's scope globs, default flag type, naming prefix, required actions, and any rollout override — are defined in the **active policy** (see the *Active policy* section of `SKILL.md`; `references/policy-defaults.md` shows the shape and ships a worked `payments` example). Add or edit domains in your `.unleash/featureops.md` override, not here. This file covers *how* to apply a matching domain policy.
 
 ---
 
