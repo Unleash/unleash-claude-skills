@@ -9,7 +9,7 @@ Do **not** edit this file to customize the skill — in a plugin install it live
 - **Project override (recommended):** `./.unleash/featureops.md` — committed with the repo, travels with it, and **wins** over everything. Put repo-specific policy here, especially [High-risk domains](#high-risk-domains).
 - **User override (optional):** `~/.unleash/featureops.md` — your personal cross-repo defaults.
 
-**Precedence: project override → user override → these defaults.** Create `.unleash/featureops.md` and copy in only the section headings you want to change, editing the values under them (leave the rest out — they fall back here). The quickest way to get a full starting copy is to ask Claude — *"set up a FeatureOps policy override for this project"* — and it will write the file from this template. See the skill README for the fork-and-republish alternative if your whole company standardizes on one policy.
+**Precedence: project override → user override → these defaults.** Create `.unleash/featureops.md` and copy in only the section headings you want to change, editing the values under them (leave the rest out — they fall back here). The quickest way to get a full starting copy is to ask the agent — *"set up a FeatureOps policy override for this project"* — and it will write the file from this template. See the skill README for the fork-and-republish alternative if your whole company standardizes on one policy.
 
 ---
 

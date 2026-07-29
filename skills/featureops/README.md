@@ -1,6 +1,6 @@
 # FeatureOps — `/unleash:featureops`
 
-A skill in the [Unleash plugin for Claude Code](https://github.com/Unleash/unleash-claude-skills). It brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into Claude Code: evaluate changes for risk, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags.
+A skill in the [Unleash plugin for Claude Code](https://github.com/Unleash/unleash-claude-skills). It brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into your coding agent: evaluate changes for risk, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags.
 
 This skill ships as a **customizable template**: the defaults work out of the box, and you tailor them to your team by writing a policy override file — no editing the skill. See [Customize for your team](#customize-for-your-team).
 
@@ -35,7 +35,7 @@ Don't edit the skill's files — in a plugin install they live in a managed cach
 - **Project override (recommended)** — create `./.unleash/featureops.md` in your repo and set only the values you want to change, especially your real high-risk domains. It's committed with the repo and wins over everything.
 - **User override (optional)** — `~/.unleash/featureops.md` for personal cross-repo defaults.
 
-Precedence: **project → user → shipped defaults**. [`references/policy-defaults.md`](references/policy-defaults.md) lists every value and doubles as the template — copy the sections you want to change. Or just ask Claude: *"set up a FeatureOps policy override for this project."*
+Precedence: **project → user → shipped defaults**. [`references/policy-defaults.md`](references/policy-defaults.md) lists every value and doubles as the template — copy the sections you want to change. Or just ask the agent: *"set up a FeatureOps policy override for this project."*
 
 The opt-in high-risk-edit hook is configured separately (it lives in the plugin repo's `hooks/`, not this skill) — point its `if` glob at your high-risk directories; see [`hooks/README.md`](https://github.com/Unleash/unleash-claude-skills/blob/main/hooks/README.md).
 

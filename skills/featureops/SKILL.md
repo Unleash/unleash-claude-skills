@@ -7,13 +7,13 @@ allowed-tools: mcp__unleash__evaluate_change mcp__unleash__detect_flag mcp__unle
 
 # Unleash · FeatureOps Template
 
-This skill brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into Claude Code. It drives the [Unleash MCP server](https://github.com/Unleash/unleash-mcp) to evaluate changes for risk, create flags with consistent naming, generate SDK guard code, manage rollouts, and clean up stale flags.
+This skill brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into your coding agent. It drives the [Unleash MCP server](https://github.com/Unleash/unleash-mcp) to evaluate changes for risk, create flags with consistent naming, generate SDK guard code, manage rollouts, and clean up stale flags.
 
 The defaults work out of the box, but feature-management conventions vary across teams and industries. This skill ships as a **customizable template**: every tunable value lives in one policy file, which you override per project *without editing the skill* — see [Active policy](#active-policy) and [Customize for your team](#customize-for-your-team).
 
 ## Setup check
 
-This skill needs the Unleash MCP server connected. When installed as a Claude Code plugin, the server is registered automatically from the bundled `.mcp.json`; you only need to set three environment variables in the shell that launches Claude Code (or use the remote MCP server — see `examples/README.md` in the plugin repository, https://github.com/Unleash/unleash-claude-skills, for details):
+This skill needs the Unleash MCP server connected. When installed as a Claude Code plugin, the server is registered automatically from the bundled `.mcp.json`; you only need to set three environment variables in the shell that launches your agent. With a standalone install on any other agent, connect the Unleash MCP server yourself first (see `examples/README.md` in the repository, https://github.com/Unleash/unleash-claude-skills, including the remote MCP server option):
 
 ```bash
 export UNLEASH_BASE_URL=https://your-instance.getunleash.io/api
@@ -23,19 +23,21 @@ export UNLEASH_DEFAULT_PROJECT=default   # optional; defaults to "default"
 
 If the Unleash tools are not available, tell the user to complete setup (see the README at https://github.com/Unleash/unleash-claude-skills for full install, transport, and credential instructions) and stop rather than guessing flag state.
 
-> **Tool naming note:** the read-only tools are pre-approved via `allowed-tools` under two names each: `mcp__unleash__*` (standalone-skill install, where you register the server under the key `unleash`) and `mcp__plugin_unleash_mcp__*` (plugin install, where Claude Code namespaces the bundled server — keyed `mcp` in `.mcp.json` — as `mcp__plugin_<plugin>_<server>__<tool>` → `mcp__plugin_unleash_mcp__<tool>`, verified on a real install). Pre-approval only applies while this skill is active; a read-only tool invoked before the skill has loaded will still prompt once. Write operations (`create_flag`, `set_flag_rollout`, `toggle_flag_environment`, `remove_flag_strategy`) are **never** pre-approved — always let the user confirm them. `wrap_change` and `cleanup_flag` don't mutate server state (they return guard code and removal instructions), but they are deliberately not pre-approved either: each immediately precedes edits to production code paths, so the confirmation prompt stays.
+> **Tool naming note (Claude Code):** on Claude Code the read-only tools are pre-approved via `allowed-tools` under two names each: `mcp__unleash__*` (standalone-skill install, where you register the server under the key `unleash`) and `mcp__plugin_unleash_mcp__*` (plugin install, where Claude Code namespaces the bundled server — keyed `mcp` in `.mcp.json` — as `mcp__plugin_<plugin>_<server>__<tool>` → `mcp__plugin_unleash_mcp__<tool>`, verified on a real install). Pre-approval only applies while this skill is active; a read-only tool invoked before the skill has loaded will still prompt once. Write operations (`create_flag`, `set_flag_rollout`, `toggle_flag_environment`, `remove_flag_strategy`) are **never** pre-approved — always let the user confirm them. `wrap_change` and `cleanup_flag` don't mutate server state (they return guard code and removal instructions), but they are deliberately not pre-approved either: each immediately precedes edits to production code paths, so the confirmation prompt stays. On other agents, `allowed-tools` doesn't apply — they use their own permission model — but the read-only vs. write distinction above still holds: never let a write tool run without user confirmation.
 
 ## Active policy
 
 Every tunable value — naming convention, flag types and lifetimes, rollout milestones and holds, halt thresholds, staleness windows, and the high-risk domains — comes from the **active policy**. The reference files describe *how* to apply these values and never restate the numbers, so always resolve them from here.
 
-**Precedence, highest first: project override → user override → shipped defaults.** For each value, use the highest layer that sets it; anything unset falls through to the defaults. The project override and the defaults are inlined below at load time. If a user override exists (`~/.unleash/featureops.md`), read it with your Read tool and slot it *between* them.
+**Precedence, highest first: project override → user override → shipped defaults.** For each value, use the highest layer that sets it; anything unset falls through to the defaults. The project override and the defaults are inlined below at load time. If a user override exists (`~/.unleash/featureops.md`), read it with your file tools and slot it *between* them.
 
 **Project override** — `${CLAUDE_PROJECT_DIR}/.unleash/featureops.md` (repo-specific; wins):
 !`cat "${CLAUDE_PROJECT_DIR}/.unleash/featureops.md" 2>/dev/null || echo "(no project override — using user override and/or the defaults below)"`
 
 **Shipped defaults** — `references/policy-defaults.md`:
 !`cat "${CLAUDE_SKILL_DIR}/references/policy-defaults.md" 2>/dev/null || echo "(defaults file not found; load references/policy-defaults.md manually)"`
+
+> **If the two blocks above are empty or show a literal `` !`…` `` command**, your agent doesn't run inline injection (this is a Claude Code feature). Read the files yourself with your file tools and apply the same precedence: the project override `.unleash/featureops.md`, the user override `~/.unleash/featureops.md`, and this skill's `references/policy-defaults.md`.
 
 ## When to load the reference files
 
@@ -92,7 +94,7 @@ Don't edit this skill's files to customize it — in a plugin install they live 
 - **Project (recommended):** create `./.unleash/featureops.md` in the repo and set only the values you want to change — especially your real high-risk domains. It's committed with the repo and wins over everything.
 - **User (optional):** `~/.unleash/featureops.md` for personal cross-repo defaults.
 
-Copy the sections you want to change out of `references/policy-defaults.md`, or just ask Claude: *"set up a FeatureOps policy override for this project."* For company-wide standardization, the heavier alternative is to fork this repo, bake your policy into `policy-defaults.md`, and publish it as your own internal plugin — see the skill README.
+Copy the sections you want to change out of `references/policy-defaults.md`, or just ask the agent: *"set up a FeatureOps policy override for this project."* For company-wide standardization, the heavier alternative is to fork this repo, bake your policy into `policy-defaults.md`, and publish it as your own internal plugin — see the skill README.
 
 ---
 
