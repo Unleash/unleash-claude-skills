@@ -1,8 +1,8 @@
 # FeatureOps — `/unleash:featureops`
 
-A skill in the [Unleash plugin for Claude Code](https://github.com/Unleash/unleash-claude-skills). It brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into Claude Code: evaluate changes for risk, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags.
+A skill in the [Unleash plugin for Claude Code](https://github.com/Unleash/unleash-claude-skills). It brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into your coding agent: evaluate changes for risk, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags.
 
-This skill ships as a **customizable template**: the defaults work out of the box, but you adapt the reference files to your team's domains and conventions — see [Customize for your team](#customize-for-your-team).
+This skill ships as a **customizable template**: the defaults work out of the box, and you tailor them to your team by writing a policy override file — no editing the skill. See [Customize for your team](#customize-for-your-team).
 
 Install it with the plugin (`/plugin install unleash@unleash-marketplace`) or standalone (`cp -r skills/featureops ~/.claude/skills/`). See the [main README](https://github.com/Unleash/unleash-claude-skills#install) for MCP setup and environment variables.
 
@@ -10,11 +10,12 @@ Install it with the plugin (`/plugin install unleash@unleash-marketplace`) or st
 
 | Path | Purpose |
 |---|---|
-| `SKILL.md` | Skill entry point: setup check, reference map, core workflow, tool reference. |
-| `references/feature-flag-conventions.md` | Naming, flag types, and lifecycle rules. |
-| `references/rollout-guidance.md` | Default rollout milestones, hold durations, halt conditions. |
-| `references/cleanup-cadence.md` | Stale-flag thresholds, the removal workflow, and the flag-audit workflow. |
-| `references/high-risk-domains.md` | Worked example (payments) + template for adding your own high-risk domains. |
+| `SKILL.md` | Skill entry point: setup check, active-policy loader, core workflow, tool reference. |
+| `references/policy-defaults.md` | **The policy** — every tunable value (naming, flag types & lifetimes, rollout milestones/holds/thresholds, staleness windows) plus the high-risk domains. Single source of truth, and the template you copy to override. |
+| `references/feature-flag-conventions.md` | *How* to evaluate, reuse, wrap, and name flags. |
+| `references/rollout-guidance.md` | *How* to run a progressive rollout and halt safely. |
+| `references/cleanup-cadence.md` | *How* to decide a flag is stale and remove it; the flag-audit workflow. |
+| `references/high-risk-domains.md` | *How* to apply a high-risk domain policy. |
 
 ## Use it
 
@@ -29,17 +30,15 @@ The five read-only tools (`evaluate_change`, `detect_flag`, `get_flag_state`, `l
 
 ## Customize for your team
 
-Edit these reference files to match your conventions — every customizable spot is marked with `<!-- CUSTOMIZE: ... -->`:
+Don't edit the skill's files — in a plugin install they live in a managed cache that a plugin update overwrites. Instead, put your team's policy in an **override file**; the skill loads it automatically (see the *Active policy* section of `SKILL.md`) and it survives updates.
 
-1. **`references/high-risk-domains.md`** — the file you'll edit most. Replace the payments example with your team's actual high-risk areas.
-2. **`references/feature-flag-conventions.md`** — naming convention, flag types in scope, what counts as high-risk.
-3. **`references/rollout-guidance.md`** — default milestones, hold durations, halt thresholds.
-4. **`references/cleanup-cadence.md`** — stale-flag thresholds.
-5. **`SKILL.md` frontmatter** — add domain-specific keywords to the `description` so the skill activates for your team's vocabulary.
-6. **`hooks/evaluate-high-risk-save.example.json`** (in the plugin repository, not this skill directory) — the opt-in high-risk-edit hook; set its `if` glob to your high-risk directories (see [`hooks/README.md`](https://github.com/Unleash/unleash-claude-skills/blob/main/hooks/README.md)).
+- **Project override (recommended)** — create `./.unleash/featureops.md` in your repo and set only the values you want to change, especially your real high-risk domains. It's committed with the repo and wins over everything.
+- **User override (optional)** — `~/.unleash/featureops.md` for personal cross-repo defaults.
 
-Find every customizable spot in this skill:
+Precedence: **project → user → shipped defaults**. [`references/policy-defaults.md`](references/policy-defaults.md) lists every value and doubles as the template — copy the sections you want to change. Or just ask the agent: *"set up a FeatureOps policy override for this project."*
 
-```bash
-grep -rn CUSTOMIZE skills/featureops/
-```
+The opt-in high-risk-edit hook is configured separately (it lives in the plugin repo's `hooks/`, not this skill) — point its `if` glob at your high-risk directories; see [`hooks/README.md`](https://github.com/Unleash/unleash-claude-skills/blob/main/hooks/README.md).
+
+### Company-wide standardization (fork & republish)
+
+If your whole company should share one policy, the heavier alternative is to **fork this repo, bake your policy into `references/policy-defaults.md`, and publish it as your own internal plugin** (see the [main README's "Add a new skill"](https://github.com/Unleash/unleash-claude-skills#add-a-new-skill) for the marketplace mechanics). Your developers install your fork and inherit your defaults with no per-repo override, and you pull upstream changes on your own schedule (`git merge`). Use this when the policy is an org standard rather than per-repo.

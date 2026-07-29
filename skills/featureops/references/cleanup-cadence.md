@@ -1,13 +1,6 @@
 # Cleanup cadence
 
-## Customize this file for your team
-
-- **Stale signal:** default trusts Unleash's built-in `stale` marker plus a "no SDK has evaluated this flag in N days" rule (default N = 30). Tune N for your team's traffic patterns — low-traffic services may legitimately go longer between evaluations.
-- **Age-vs-type thresholds:** defaults follow Unleash's product defaults (release 40d, experiment 40d, operational 7d). If your team customized these in the Unleash admin UI, update the numbers here to match.
-- **Permanent-flag exceptions:** Unleash treats `kill-switch` and `permission` as permanent (no expected lifetime). If your team treats other types as permanent, list them here.
-- **Cleanup ownership:** default assumes the engineer who created the flag also removes it. If your team has a centralized FeatureOps function, adjust accordingly.
-
-When Claude reads this file, it applies the guidance below; the notes above are for the humans customizing it.
+Thresholds — the no-activity window, per-type expected lifetimes, which types are permanent, the audit cadence, and ownership — come from the **active policy** (see the *Active policy* section of `SKILL.md`). This file covers *how* to decide a flag is stale and *how* to remove it. Customize the thresholds via `.unleash/featureops.md`, not by editing this file.
 
 ---
 
@@ -15,29 +8,15 @@ Most feature flags are temporary by design. Flags have lifecycles: every flag sh
 
 ## When a flag is ready for cleanup
 
-<!-- CUSTOMIZE: adjust the no-activity threshold (lastSeenAt window) for your team's traffic patterns -->
+A flag is a cleanup candidate when **any** of these hold (signals in order of confidence):
 
-A flag is a cleanup candidate when **any** of these conditions hold (signals listed in order of confidence):
-
-1. **Unleash marked it `stale: true`.** This is the strongest signal — Unleash's own staleness logic decided it's overdue based on type and age.
-2. **No SDK has evaluated the flag in 30+ days** in any enabled environment (`environments[].lastSeenAt`). If clients aren't checking it, removing it from code won't change behavior.
-3. **Age exceeds the type's expected lifetime** (see the table below). A `release` flag older than 40 days, or an `operational` flag older than 7 days, is overdue by Unleash's defaults.
+1. **Unleash marked it `stale: true`.** The strongest signal — Unleash's own staleness logic decided it's overdue for its type and age.
+2. **No SDK has evaluated it within the policy's no-activity window** in any enabled environment (`environments[].lastSeenAt`). If clients aren't checking it, removing it from code won't change behavior.
+3. **Its age exceeds its type's expected lifetime** (from the policy). 
 4. **The feature has fully launched** and the legacy code path is no longer needed (user judgment, not metadata).
 5. **The experiment has concluded** and a winning variant has been picked.
 
-### Type-based expected lifetimes
-
-<!-- CUSTOMIZE: replace with your team's customized lifetimes if you changed them in the Unleash admin UI -->
-
-| Type | Default lifetime | Cleanup behavior |
-|---|---|---|
-| `operational` | 7 days | Audit aggressively — these are meant to be short-term |
-| `release` | 40 days | Audit for removal after the rollout stabilizes |
-| `experiment` | 40 days | Audit for removal after the experiment concludes |
-| `kill-switch` | Permanent | **Skip** — no expected lifetime, meant to live indefinitely |
-| `permission` | Permanent | **Skip** — ties to user attributes, not a rollout |
-
-Only `kill-switch` and `permission` are treated as permanent by default. If your team uses operational flags long-term, change the type to `kill-switch` or update the lifetime in the Unleash admin UI.
+Skip flags whose type the policy marks **permanent** — they have no expected lifetime and are not audited for removal.
 
 ## Removal workflow
 
@@ -109,22 +88,20 @@ If your team tracks technical-debt removal, mention the flag name and merge SHA 
 
 ## Periodic audits
 
-Run a flag audit on a recurring cadence. Ask Claude to "run a flag audit" and it should follow these steps:
+Run a flag audit on the policy's cadence. Ask the agent to "run a flag audit" and it should follow these steps:
 
 1. **Enumerate active flags** with `list_flags` (default `archived=false`).
 2. **Enumerate archived flags** with a second `list_flags` call setting `archived=true`. Active and archived flags are disjoint result sets in Unleash; both calls are required for a complete inventory.
-3. **Fetch each flag's state** via `get_flag_state` for the metadata that the list view doesn't include (full environment data, last-seen-at per env, etc.).
-4. **Skip** flags where `type === 'kill-switch'` or `type === 'permission'` — these are permanent by design.
+3. **Fetch each flag's state** via `get_flag_state` for the metadata the list view doesn't include (full environment data, last-seen-at per env, etc.).
+4. **Skip** flags whose type the policy marks permanent — they are permanent by design.
 5. **Surface** flags where any of these are true:
    - `stale === true` (Unleash already flagged it)
    - `archived === true` but code references may still exist (check with `cleanup_flag`)
-   - All `environments[].lastSeenAt` older than 30 days (no SDK is hitting it)
-   - `age(createdAt) > expected_lifetime_for_type(type)` (overdue by Unleash's defaults)
-6. **Prioritize** by `stale === true` first, then archived, then by oldest `lastSeenAt`, then by `age - expected_lifetime`.
+   - all `environments[].lastSeenAt` older than the policy's no-activity window (no SDK is hitting it)
+   - `age(createdAt)` exceeds the type's expected lifetime (overdue by the policy)
+6. **Prioritize** by `stale === true` first, then archived, then by oldest `lastSeenAt`, then by how far age exceeds the expected lifetime.
 7. **Report, don't act.** Produce a prioritized cleanup report for the user to triage. Do not call `cleanup_flag` or remove code automatically — the report is for triage.
 8. If `get_flag_state` returns no `environments[]` data for some flags, note that in the report rather than guessing.
-
-A weekly audit is reasonable for most teams. Run it more frequently during release-heavy periods.
 
 ## What not to clean up automatically
 
@@ -134,4 +111,4 @@ Never auto-execute `cleanup_flag` followed by code removal without the user revi
 
 - For naming and creation: `feature-flag-conventions.md`
 - For rollout state checks: `rollout-guidance.md`
-- For domain-specific overrides: `high-risk-domains.md`
+- For high-risk domain policies: the active policy (`references/policy-defaults.md`)

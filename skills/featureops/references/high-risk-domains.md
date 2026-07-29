@@ -1,130 +1,31 @@
 # High-risk domains
 
-## Customize this file for your team
-
-**This is the file you'll edit most.** The example below uses a "payments" domain because it's universally recognizable, but the value of this skill comes from replacing it with your team's actual high-risk areas.
-
-Decide which directories or modules in your codebase carry enough release risk that every change should be flag-protected by default. Common examples:
-
-- **Payments / billing** — third-party processor calls, ledger updates, refund flows
-- **Authentication / authorization** — login flows, session handling, permission checks
-- **Data migrations** — schema changes, backfills, dual-write paths
-- **Public API** — endpoints external customers depend on
-- **External integrations** — webhooks, third-party APIs, message queue consumers
-- **Compliance-sensitive paths** — anything touched by SOC 2, HIPAA, GDPR, PCI scope
-
-Then, for each domain, decide:
-
-1. The **directory glob** that scopes the policy (e.g., `src/payments/**/*.ts`).
-2. The **default flag type** (often `kill-switch` for external dependencies, `release` for internal logic).
-3. The **naming prefix** that flags in this domain must use (e.g., `payments-*`).
-4. Whether **all changes** require a flag or only certain change types (new endpoints, behavior changes, etc.).
-
-Duplicate the worked example below for each domain you want to protect.
-
-When Claude reads this file, it applies the policies below; the notes above are for the humans customizing it.
+The domain policies themselves — each domain's scope globs, default flag type, naming prefix, required actions, and any rollout override — are defined in the **active policy** (see the *Active policy* section of `SKILL.md`; `references/policy-defaults.md` shows the shape and ships a worked `payments` example). Add or edit domains in your `.unleash/featureops.md` override, not here. This file covers *how* to apply a matching domain policy.
 
 ---
 
-This file applies when the conversation involves files in a high-risk domain. Apply the matching policy to all changes in scope.
+This file applies when a change touches files in a high-risk domain — a directory or module where release risk is high enough that **every change is flag-protected by default**.
 
-## Worked example: payments
+## Applying a domain policy
 
-<!-- CUSTOMIZE: replace this entire section with your team's first high-risk domain. Keep the structure (Scope / Default flag type / Naming / Required actions). -->
+When the change's path matches a domain's **Scope** glob in the active policy:
 
-### Scope
+1. **Evaluate first.** Call `evaluate_change` before writing implementation code.
+2. **Require a flag.** Do not implement the change without one, even for "small" or "obvious" edits — small changes in these domains have outsized impact.
+3. **Use the domain's default flag type and naming prefix** from the policy.
+4. **Include a realistic fallback** for every external call (a legacy path, a graceful failure message, or queue-and-retry). Hand to the user for review if no clear fallback exists.
+5. **Test the fallback** — at least one test that exercises the flag-disabled path.
+6. **Follow any extra required actions** the domain policy lists (for example, default-off in production and enable in staging first via `toggle_flag_environment`).
 
-All changes that touch files matching:
+If a change spans more than one domain, apply the stricter policy.
 
-- `src/payments/**/*.ts`
-- `src/payments/**/*.tsx`
-- `src/billing/**/*.ts`
+## Rollout for high-risk domains
 
-### Default flag type
-
-- **`kill-switch`** for any change that calls an external payment provider (Stripe, PayPal, Adyen, etc.).
-- **`release`** for internal payment logic that doesn't cross a network boundary.
-
-The `kill-switch` choice exists because external dependencies can fail at any time, and the ability to disable the integration in seconds is more valuable than a gradual rollout strategy.
-
-### Naming
-
-All flags in this domain must start with `payments-`. Examples:
-
-- `payments-stripe-integration`
-- `payments-paypal-checkout`
-- `payments-refund-v2`
-- `payments-fraud-check`
-
-### Required actions
-
-For every change in this domain:
-
-1. **Evaluate first.** Call `evaluate_change` before writing implementation code. The tool will recommend a flag.
-2. **Require a flag.** Do not implement payment changes without a flag, even for "small" or "obvious" changes. Past incidents have shown that small changes in this domain can have outsized impact.
-3. **Include a fallback path.** Every external provider call must have a fallback — either a legacy provider, a graceful failure message, or a queue-and-retry pattern. Hand to the user for review if no clear fallback exists.
-4. **Test the fallback.** Write at least one test that exercises the fallback path (flag disabled).
-5. **Default off in production.** Newly created payment flags must be disabled in production at creation time. Use `toggle_flag_environment` to enable in staging first.
-
-### Rollout overrides
-
-For this domain, override the defaults in `rollout-guidance.md`:
-
-- Start at **1%**, not 10%.
-- Hold **48 hours** at every milestone (the default holds 24h at the first step, 48h at the second).
-- Add a `25%` milestone between 10% and 50%.
-- Halt thresholds are **stricter**: pause if error rate exceeds 0.1% (one tenth of the default 1%).
-
----
-
-## How to add your own domain
-
-Copy the worked example above and adapt it. The minimum viable policy is four sections:
-
-1. **Scope** — one or more directory globs that define what files this policy applies to.
-2. **Default flag type** — pick from the types listed in `feature-flag-conventions.md`.
-3. **Naming** — the prefix all flags in this domain must use.
-4. **Required actions** — the bullet list of what Claude must do for changes in this scope.
-
-Optionally add a **Rollout overrides** section if this domain needs different milestones or halt thresholds than the team default.
-
-## Suggested second domain to add
-
-If your team handles user authentication or session data, add an "auth" domain next. Suggested scaffold:
-
-<!-- CUSTOMIZE: uncomment and adapt this block to add an auth domain policy -->
-
-<!--
-
-## Auth
-
-### Scope
-
-- `src/auth/**/*.ts`
-- `src/middleware/auth*.ts`
-- `src/session/**/*.ts`
-
-### Default flag type
-
-- `release` for new auth methods (SSO, passkeys, MFA enrollment).
-- `kill-switch` for identity provider integrations (Auth0, Okta, Cognito).
-
-### Naming
-
-All flags in this domain start with `auth-`. Examples: `auth-sso-google`, `auth-mfa-webauthn`, `auth-session-refresh-v2`.
-
-### Required actions
-
-1. Evaluate first. Auth changes affect every user every session.
-2. Require a flag for any change to login, logout, or session validation.
-3. Default off in production; require explicit user confirmation before enabling.
-4. Roll out internal-first (target by employee email domain).
-5. Have a documented rollback plan before enabling beyond 10%.
-
--->
+For any change in a high-risk domain, use the active policy's **high-risk rollout override** — a more conservative ramp, longer holds, and stricter halt thresholds than the default. See `rollout-guidance.md` for the mechanics.
 
 ## Related
 
-- For naming and types: `feature-flag-conventions.md`
-- For rollout milestones: `rollout-guidance.md` (this file overrides for high-risk domains)
-- For automating evaluation on edit: the opt-in PostToolUse hook in the plugin repository's `hooks/` directory (https://github.com/Unleash/unleash-claude-skills/tree/main/hooks — not shipped inside this skill directory)
+- Naming, types, and the reuse/wrap workflow: `feature-flag-conventions.md`
+- Rollout mechanics: `rollout-guidance.md`
+- Defining the domains themselves: the active policy (`references/policy-defaults.md`)
+- Automating evaluation on edit: the opt-in `PostToolUse` hook in the plugin repository's `hooks/` directory (https://github.com/Unleash/unleash-claude-skills/tree/main/hooks — not shipped inside this skill directory)
