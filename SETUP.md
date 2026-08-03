@@ -1,6 +1,6 @@
 # Setup
 
-This plugin drives the **Unleash MCP server** — connect that once and every skill (`featureops`, `migrate-gitlab-flags`) works. Follow these steps after installing.
+This plugin drives the **Unleash MCP server** — connect that once and every skill works. Follow these steps after installing.
 
 ## 1. Prerequisites
 
@@ -32,7 +32,3 @@ For a reusable setup, keep these in `~/.unleash/mcp.env` and source it from your
 ## 4. Verify
 
 Restart your agent, then ask: *"list my Unleash projects."* If it returns your projects, setup is complete. If the Unleash tools aren't available, re-check the environment variables and that the MCP server is connected (in Claude Code, run `/mcp`).
-
-## 5. Customize (optional)
-
-The `featureops` skill's policy — naming, rollout milestones, high-risk domains, and more — is customizable per team via a `.unleash/featureops.md` override file, without editing the skill. See [`skills/featureops/README.md`](skills/featureops/README.md#customize-for-your-team).
