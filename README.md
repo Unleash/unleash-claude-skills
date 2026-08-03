@@ -1,7 +1,5 @@
 # Unleash for Claude Code
 
-[![Discover on skills.sh](https://skills.sh/b/Unleash/unleash-claude-skills)](https://skills.sh/Unleash/unleash-claude-skills)
-
 A Claude Code **plugin** that brings [Unleash](https://www.getunleash.io) feature management into your editor — a growing set of skills backed by the [Unleash MCP server](https://github.com/Unleash/unleash-mcp), encoding [FeatureOps](https://featureops.io) practices: controlling software behavior at runtime.
 
 Skills work out of the box. Some — like [`featureops`](skills/featureops/) — also ship as **customizable templates** you fork and adapt to your team's conventions; each skill's README says whether and how.
