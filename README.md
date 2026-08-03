@@ -144,6 +144,13 @@ The plugin auto-discovers every skill under `skills/` (the marketplace entry sca
 - **Local stdio transport** — works against any Unleash Cloud or self-hosted instance with API access.
 - **Remote HTTP transport** — requires the instance admin to enable remote MCP and your IDP to permit OAuth 2.0 DCR. See `examples/README.md`.
 
+## Security & permissions
+
+- **Bundled software:** the only external software this plugin configures is the [Unleash MCP server](https://github.com/Unleash/unleash-mcp) ([`@unleash/mcp`](https://www.npmjs.com/package/@unleash/mcp), Apache-2.0, maintained by Unleash). No other binaries or network calls are added. Review the source before installing.
+- **Credentials:** the server authenticates with an Unleash **personal access token** you provide via environment variables (`UNLEASH_PAT`); nothing is committed to the repo, and no credentials are bundled.
+- **Tool approvals:** only the five **read-only** tools (`evaluate_change`, `detect_flag`, `get_flag_state`, `list_projects`, `list_flags`) are pre-approved. Every **write** operation (`create_flag`, `set_flag_rollout`, `toggle_flag_environment`, `remove_flag_strategy`) — and the code-editing helpers `wrap_change`/`cleanup_flag` — always prompt for explicit confirmation.
+- **Scope of writes:** writes go only to the Unleash instance your token authorizes, at the permission level that token grants.
+
 ## License and policies
 
 - **License:** [Apache-2.0](./LICENSE)
