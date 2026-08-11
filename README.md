@@ -36,7 +36,7 @@ Installs the whole `unleash` plugin (every skill) and auto-registers the Unleash
 
 Then set your environment variables (below) and restart Claude Code or run `/reload-plugins`.
 
-> **Version pinning:** the bundled config runs `@unleash/mcp@latest` via `npx`, so every session resolves the newest release. If your org requires vetted or reproducible dependencies, pin a version in `.mcp.json` (e.g. `@unleash/mcp@0.4.1`) and update it deliberately.
+> **Version pinning:** the bundled config runs a pinned release of `@unleash/mcp` (currently `0.4.1`) via `npx`, so sessions resolve a known, vetted version. To pick up a newer release, bump the version in `.mcp.json` deliberately.
 
 ### Option B — Install a single skill standalone
 
