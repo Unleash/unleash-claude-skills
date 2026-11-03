@@ -36,7 +36,7 @@ Installs the whole `unleash` plugin (every skill) and auto-registers the Unleash
 
 Then set your environment variables (below) and restart Claude Code or run `/reload-plugins`.
 
-> **Version pinning:** the bundled config runs `@unleash/mcp@latest` via `npx`, so every session resolves the newest release. If your org requires vetted or reproducible dependencies, pin a version in `.mcp.json` (e.g. `@unleash/mcp@0.4.1`) and update it deliberately.
+> **Version pinning:** the bundled config runs `@unleash/mcp@0.5.0` via `npx`. The skills in this plugin call the tools of that MCP server version (`evaluate_change`, `detect_flag`, `wrap_change`, and so on). A new major version of the Unleash MCP server is in development with a different set of tools, so don't switch to `@latest` until this plugin has been updated for it. If your org requires vetted or reproducible dependencies, you can pin any other version in `.mcp.json` and update it deliberately.
 
 ### Option B — Install a single skill standalone
 
@@ -53,7 +53,7 @@ mkdir -p .claude/skills && cp -r skills/featureops .claude/skills/
 A standalone skill can't bundle an MCP server, so register it yourself under the key `unleash` (which matches the skills' pre-approved tool names — the bundled `.mcp.json` keys the server `mcp` for the *plugin* path, so add it explicitly here rather than copying that file):
 
 ```bash
-claude mcp add unleash -- npx -y @unleash/mcp@latest --log-level error
+claude mcp add unleash -- npx -y @unleash/mcp@0.5.0 --log-level error
 ```
 
 Unleash's official [Claude Code integration guide](https://docs.getunleash.io/integrate/claude-code) shows the full command (with `-e` env flags and `--scope`) if you prefer to pass credentials inline.
