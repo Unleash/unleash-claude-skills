@@ -22,7 +22,7 @@ More skills are on the way — see [Add a new skill](#add-a-new-skill).
 - **Claude Code** — a recent version (plugin marketplaces and bundled MCP servers are required for Option A).
 - An **Unleash instance** (Cloud or self-hosted) with API access.
 - A **personal access token (PAT)** with permissions to create and manage flags.
-- For local MCP transport: **Node.js 18+**.
+- For local MCP transport: **Node.js 24+**.
 - For remote MCP transport: the Unleash instance admin must enable **Admin settings → Remote MCP server**, and your identity provider must allow OAuth 2.0 Dynamic Client Registration.
 
 ### Option A — Install the plugin (recommended)
@@ -36,7 +36,7 @@ Installs the whole `unleash` plugin (every skill) and auto-registers the Unleash
 
 Then set your environment variables (below) and restart Claude Code or run `/reload-plugins`.
 
-> **Version pinning:** the bundled config runs `@unleash/mcp@0.5.0` via `npx`. The skills in this plugin call the tools of that MCP server version (`evaluate_change`, `detect_flag`, `wrap_change`, and so on). A new major version of the Unleash MCP server is in development with a different set of tools, so don't switch to `@latest` until this plugin has been updated for it. If your org requires vetted or reproducible dependencies, you can pin any other version in `.mcp.json` and update it deliberately.
+> **Version pinning:** the bundled config runs `@unleash/mcp@0.6.0-beta.5` via `npx`. The skills call the tools of that server version (`search`, `inspect`, `release`, `manage_flag`, and so on), which differ from those of `0.5.0`, the version npm's `latest` tag points to. Don't switch to `@latest` or an older pin: the skills would call tools that version doesn't have. If your org requires vetted or reproducible dependencies, pin another version in `.mcp.json` and update it deliberately.
 
 ### Option B — Install a single skill standalone
 
@@ -53,7 +53,7 @@ mkdir -p .claude/skills && cp -r skills/featureops .claude/skills/
 A standalone skill can't bundle an MCP server, so register it yourself under the key `unleash` (which matches the skills' pre-approved tool names — the bundled `.mcp.json` keys the server `mcp` for the *plugin* path, so add it explicitly here rather than copying that file):
 
 ```bash
-claude mcp add unleash -- npx -y @unleash/mcp@0.5.0 --log-level error
+claude mcp add unleash -- npx -y @unleash/mcp@0.6.0-beta.5
 ```
 
 Unleash's official [Claude Code integration guide](https://docs.getunleash.io/integrate/claude-code) shows the full command (with `-e` env flags and `--scope`) if you prefer to pass credentials inline.
@@ -71,12 +71,11 @@ This copies the skill *files* into your agent — it does **not** set up the Unl
 
 ### Environment variables (shared by all skills)
 
-Claude Code's `.mcp.json` expansion supports `${VAR}` and the default form `${VAR:-default}` (the config uses `${UNLEASH_DEFAULT_PROJECT:-default}` so the project falls back to `default` when unset). Set:
+The bundled `.mcp.json` reads these from your environment. Set:
 
 ```bash
-export UNLEASH_BASE_URL=https://your-instance.getunleash.io/api
+export UNLEASH_BASE_URL=https://your-instance.getunleash.io   # the instance root, without /api
 export UNLEASH_PAT=your-personal-access-token
-export UNLEASH_DEFAULT_PROJECT=default   # optional; defaults to "default"
 ```
 
 A convenient pattern is a credentials file sourced from your shell profile:
@@ -84,9 +83,8 @@ A convenient pattern is a credentials file sourced from your shell profile:
 ```bash
 mkdir -p ~/.unleash
 cat > ~/.unleash/mcp.env << 'EOF'
-UNLEASH_BASE_URL=https://your-instance.getunleash.io/api
+UNLEASH_BASE_URL=https://your-instance.getunleash.io
 UNLEASH_PAT=your-personal-access-token
-UNLEASH_DEFAULT_PROJECT=default
 EOF
 chmod 600 ~/.unleash/mcp.env
 ```
@@ -148,7 +146,7 @@ The plugin auto-discovers every skill under `skills/` (the marketplace entry sca
 
 - **Bundled software:** the only external software this plugin configures is the [Unleash MCP server](https://github.com/Unleash/unleash-mcp) ([`@unleash/mcp`](https://www.npmjs.com/package/@unleash/mcp), Apache-2.0, maintained by Unleash). No other binaries or network calls are added. Review the source before installing.
 - **Credentials:** the server authenticates with an Unleash **personal access token** you provide via environment variables (`UNLEASH_PAT`); nothing is committed to the repo, and no credentials are bundled.
-- **Tool approvals:** only the five **read-only** tools (`evaluate_change`, `detect_flag`, `get_flag_state`, `list_projects`, `list_flags`) are pre-approved. Every **write** operation (`create_flag`, `set_flag_rollout`, `toggle_flag_environment`, `remove_flag_strategy`) — and the code-editing helpers `wrap_change`/`cleanup_flag` — always prompt for explicit confirmation.
+- **Tool approvals:** only **read-only** tools are pre-approved (`search`, `inspect`, `evaluate`, `audit`, `docs`, as each skill lists them). Every **write** tool (`release`, `kill_switch`, `experiment`, `manage_flag`, `configure`) always prompts for explicit confirmation.
 - **Scope of writes:** writes go only to the Unleash instance your token authorizes, at the permission level that token grants.
 
 ## License and policies
