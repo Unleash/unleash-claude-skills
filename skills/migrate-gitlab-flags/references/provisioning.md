@@ -42,23 +42,23 @@ Naming hint: Unleash docs, source, and SDK repositories often call a **backend t
 
 Two hosting modes, same tools ([documentation](https://docs.getunleash.io/integrate/mcp) and [GitHub Repository](https://github.com/unleash/unleash-mcp)). If the session already has the server connected, use it directly — no setup step.
 
-- **Local**: `npx -y @unleash/mcp@0.5.0` with `UNLEASH_BASE_URL` + `UNLEASH_PAT` env vars (Claude Code: `claude mcp add unleash --env … -- npx -y @unleash/mcp@0.5.0`). Optional `UNLEASH_DEFAULT_PROJECT`; `--dry-run` for a rehearsal pass.
+- **Local**: `npx -y @unleash/mcp@0.6.0-beta.5` (Node.js 24+) with `UNLEASH_BASE_URL` (the instance root, without `/api`) + `UNLEASH_PAT` env vars (Claude Code: `claude mcp add unleash --env … -- npx -y @unleash/mcp@0.6.0-beta.5`). There is no dry-run mode; rehearse against a scratch project.
 - **Remote** (Enterprise): the instance itself serves `https://<instance-url>/api/admin/mcp` once enabled (Admin settings → Remote MCP server). Authenticate **either** via OAuth 2.0 Dynamic Client Registration — the browser flow exchanges the login session for a 24-hour PAT, and the org must permit DCR self-registration — **or** by supplying a PAT directly. No local install; fits orgs that centralize access control.
 
 Tool mapping for the inventory:
 
 | Migration step | MCP tool |
 |---|---|
-| confirm target project | `list_projects` |
-| duplicate check | `list_flags`, `detect_flag` |
-| create flag | `create_flag` (type `release` unless told otherwise) |
-| percentage rollout strategies | `set_flag_rollout` |
-| enable/disable per environment | `toggle_flag_environment` |
-| read back for verification | `get_flag_state` |
+| confirm target project, list environments | `search` (projects, environments) |
+| duplicate check | `search` (flags, including the `archived` stage) |
+| create segments | `configure` |
+| create flag | `manage_flag` `define` (type `release` unless told otherwise) |
+| rollout strategies and enable/disable per environment | `release`, one call per environment with all of that environment's targets |
+| read back for verification | `inspect` |
 
-Parity trap: `set_flag_rollout` defaults `groupId` to the feature name — the same bucket-reassigning default the UI has. **Always pass `groupId` explicitly** (usually `"default"` for GitLab migrations) and confirm it via `get_flag_state`. Also ignore the MCP server's own built-in workflow guidance (`evaluate_change` → `create_flag` is a new-feature flow, not a migration), and likewise the `featureops` skill's conventions if it is installed alongside this one — its naming patterns, evaluate-first gate, and rollout milestones apply to *new* flags, never to migrated ones — this reference's tool mapping governs. Once the migration completes and parity is proven, the featureops conventions resume governing the migrated flags' ongoing lifecycle.
+Parity traps: a target's `rolloutGroup` is Unleash's `groupId` and defaults to the flag name, the same bucket-reassigning default the UI has. **Always pass `rolloutGroup` explicitly** (usually `"default"` for GitLab migrations) and confirm it via `inspect`. `release` replaces an environment's targets, so send every target for that environment in one call. Also ignore the `featureops` skill's conventions if it is installed alongside this one — its naming patterns, evaluate-first gate, and rollout milestones apply to *new* flags, never to migrated ones — this reference's tool mapping governs. Once the migration completes and parity is proven, the featureops conventions resume governing the migrated flags' ongoing lifecycle.
 
-Not covered — route around: segments (create via UI/Admin API before strategies that reference them), constraint-only strategies if `set_flag_rollout` can't express them (fall back to the Admin API strategy endpoint for exactly those), environment enumeration (no MCP tool lists environments — read-only `GET /api/admin/environments`), project creation, flag deletion.
+Not covered — route around: strategies `release` can't express as targets (fall back to the Admin API strategy endpoint for exactly those), flag deletion (the MCP server only archives).
 
 ## Mechanism 2 — import files
 
