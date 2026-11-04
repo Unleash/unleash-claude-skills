@@ -4,7 +4,7 @@ This template provides two automation behaviors around feature-flag work. They l
 
 | Behavior | How it works | Where it lives |
 |---|---|---|
-| **Flag audit** (on demand) | Ask Claude to "run a flag audit" and the skill follows the audit workflow | `skills/featureops/references/cleanup-cadence.md` → *Periodic audits* |
+| **Flag audit** (on demand) | Ask Claude to "run a flag audit" and the skill follows the audit workflow | `skills/featureops/references/cleanup-cadence.md` → *Auditing* |
 | **High-risk-edit check** (on file edit) | A `PostToolUse` hook matching `Edit`/`Write` that reminds you to evaluate risky changes for a flag | `evaluate-high-risk-save.example.json` (this directory) |
 
 ## Why the file-edit hook is opt-in
@@ -20,7 +20,7 @@ Edit `evaluate-high-risk-save.example.json` first:
 | Field | Default | Change to |
 |---|---|---|
 | `if` | `Edit(src/payments/**)` + `Write(src/payments/**)` | The glob for *your* high-risk directories, e.g. `Edit(src/auth/**)`. The example ships a paired `Edit` and `Write` entry because the `if` permission-rule syntax is per-tool — one entry only covers one tool, so both are needed to catch edits *and* new files. Add more entries for multiple domains. |
-| `command` | Reminder referencing the skill's naming conventions | Add domain-specific guidance if your high-risk areas use different naming patterns |
+| `command` | Reminder to follow the featureops skill | Add domain-specific guidance if your high-risk areas use different naming patterns |
 
 Then activate it one of two ways:
 
@@ -35,5 +35,5 @@ Reload with `/reload-plugins` (plugin hooks) or restart Claude Code (settings ho
 
 ## Related
 
-- Conventions the hook references: `../skills/featureops/references/feature-flag-conventions.md`, `../skills/featureops/references/high-risk-domains.md`
+- Conventions the hook references: `../skills/featureops/references/evaluate-change.md`, `../skills/featureops/references/high-risk-domains.md`
 - Claude Code hooks reference: https://code.claude.com/docs/en/hooks
