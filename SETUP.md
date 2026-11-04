@@ -5,8 +5,7 @@ This plugin drives the **Unleash MCP server** — connect that once and every sk
 ## 1. Prerequisites
 
 - An **Unleash instance** (Cloud or self-hosted) with API access.
-- A **personal access token (PAT)** with permission to create and manage flags.
-- **Node.js 24+** for the local (stdio) transport.
+- For the local (stdio) transport: **Node.js 24+** and a **personal access token (PAT)** with permission to create and manage flags. The remote transport needs neither: you log in through your browser instead.
 
 ## 2. Connect the MCP server
 

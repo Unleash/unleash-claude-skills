@@ -21,8 +21,7 @@ More skills are on the way — see [Add a new skill](#add-a-new-skill).
 
 - **Claude Code** — a recent version (plugin marketplaces and bundled MCP servers are required for Option A).
 - An **Unleash instance** (Cloud or self-hosted) with API access.
-- A **personal access token (PAT)** with permissions to create and manage flags.
-- For local MCP transport: **Node.js 24+**.
+- For local MCP transport (the default): **Node.js 24+** and a **personal access token (PAT)** with permissions to create and manage flags.
 - For remote MCP transport: the Unleash instance admin must enable **Admin settings → Remote MCP server**, and your identity provider must allow OAuth 2.0 Dynamic Client Registration.
 
 ### Option A — Install the plugin (recommended)
@@ -99,7 +98,7 @@ fi
 
 Restart the shell, then restart Claude Code. Verify by asking Claude *"list my Unleash projects"*.
 
-**Remote mode only needs `UNLEASH_PAT` or the OAuth flow** (the URL is in the config directly); setting all three is harmless and lets you switch transports later. See `examples/README.md` for the remote transport.
+**The remote transport needs neither variable:** you log in through your browser on first use. See `examples/README.md`.
 
 ## Using the skills
 
@@ -145,7 +144,7 @@ The plugin auto-discovers every skill under `skills/` (the marketplace entry sca
 ## Security & permissions
 
 - **Bundled software:** the only external software this plugin configures is the [Unleash MCP server](https://github.com/Unleash/unleash-mcp) ([`@unleash/mcp`](https://www.npmjs.com/package/@unleash/mcp), Apache-2.0, maintained by Unleash). No other binaries or network calls are added. Review the source before installing.
-- **Credentials:** the server authenticates with an Unleash **personal access token** you provide via environment variables (`UNLEASH_PAT`); nothing is committed to the repo, and no credentials are bundled.
+- **Credentials:** the local server authenticates with an Unleash **personal access token** you provide in `UNLEASH_PAT`. The remote server uses a browser login that issues a 24-hour token. Nothing is committed to the repo, and no credentials are bundled.
 - **Tool approvals:** only **read-only** tools are pre-approved (`search`, `inspect`, `evaluate`, `audit`, `docs`, as each skill lists them). Every **write** tool (`release`, `kill_switch`, `experiment`, `manage_flag`, `configure`) always prompts for explicit confirmation.
 - **Scope of writes:** writes go only to the Unleash instance your token authorizes, at the permission level that token grants.
 

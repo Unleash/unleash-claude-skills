@@ -43,7 +43,7 @@ Naming hint: Unleash docs, source, and SDK repositories often call a **backend t
 Two hosting modes, same tools ([documentation](https://docs.getunleash.io/integrate/mcp) and [GitHub Repository](https://github.com/unleash/unleash-mcp)). If the session already has the server connected, use it directly — no setup step.
 
 - **Local**: `npx -y @unleash/mcp@0.6.0-beta.5` (Node.js 24+) with `UNLEASH_BASE_URL` (the instance root, without `/api`) + `UNLEASH_PAT` env vars (Claude Code: `claude mcp add unleash --env … -- npx -y @unleash/mcp@0.6.0-beta.5`). There is no dry-run mode; rehearse against a scratch project.
-- **Remote** (Enterprise): the instance itself serves `https://<instance-url>/api/admin/mcp` once enabled (Admin settings → Remote MCP server). Authenticate **either** via OAuth 2.0 Dynamic Client Registration — the browser flow exchanges the login session for a 24-hour PAT, and the org must permit DCR self-registration — **or** by supplying a PAT directly. No local install; fits orgs that centralize access control.
+- **Remote** (Enterprise): the instance itself serves `https://<instance-url>/api/admin/mcp` once enabled (Admin settings → Remote MCP server). Authenticates by default through OAuth 2.0 Dynamic Client Registration: the browser flow exchanges the login session for a 24-hour PAT, and the org must permit DCR self-registration. Where no browser is available (CI), send a PAT in an `Authorization: Bearer` header instead. No local install; fits orgs that centralize access control.
 
 Tool mapping for the inventory:
 
