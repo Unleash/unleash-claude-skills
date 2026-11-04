@@ -1,6 +1,6 @@
 ---
 name: featureops
-description: Put code changes behind Unleash feature flags and take them out again. Decides whether a change needs a flag, finds an existing flag before creating one, wraps code so the flag works at runtime, plans progressive rollouts, removes flags from the code, and audits stale flags. Use when working with feature flags, feature toggles, rollouts, releases, experiments, kill switches or the Unleash MCP server. Not for migrating flags from another flag system. Team policy can be overridden per project in `.unleash/featureops.md`.
+description: Put code changes behind Unleash feature flags and take them out again. Decides whether a change needs a flag, finds an existing flag before creating one, wraps code so the flag works at runtime, plans progressive rollouts, removes flags from the code, and audits stale flags. Use when working with feature flags, feature toggles, rollouts, releases, experiments, kill switches or the Unleash MCP server. Team policy can be overridden per project in `.unleash/featureops.md`.
 license: Apache-2.0
 allowed-tools: mcp__unleash__search mcp__unleash__inspect mcp__unleash__evaluate mcp__unleash__audit mcp__unleash__docs mcp__plugin_unleash_mcp__search mcp__plugin_unleash_mcp__inspect mcp__plugin_unleash_mcp__evaluate mcp__plugin_unleash_mcp__audit mcp__plugin_unleash_mcp__docs
 ---
