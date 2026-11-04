@@ -36,7 +36,7 @@ Installs the whole `unleash` plugin (every skill) and auto-registers the Unleash
 
 Then set your environment variables (below) and restart Claude Code or run `/reload-plugins`.
 
-> **Version pinning:** the bundled config runs `@unleash/mcp@0.6.0-beta.5` via `npx`. The skills call the tools of that server version (`search`, `inspect`, `release`, `manage_flag`, and so on), which differ from those of `0.5.0`, the version npm's `latest` tag points to. Don't switch to `@latest` or an older pin: the skills would call tools that version doesn't have. If your org requires vetted or reproducible dependencies, pin another version in `.mcp.json` and update it deliberately.
+> **Version pinning:** the bundled config pins `@unleash/mcp@0.6.0-beta.5` and runs it via `npx`. The skills call that version's tools (`search`, `inspect`, `release`, `manage_flag`, and so on), so if you change the pin in `.mcp.json`, check that the version you pick still provides them.
 
 ### Option B — Install a single skill standalone
 
