@@ -31,7 +31,11 @@ The same rule applies to anything registered once:
 | Dependency injection bindings | Inside the method that is called, or in a factory that resolves per call |
 | Values read into a constant or config at boot | At the point of use |
 
-A kill switch reads the other way round: on means the thing it is named after is turned off.
+A kill switch is an [inverted feature flag](https://docs.getunleash.io/guides/feature-flag-best-practices#strategies-for-large-organizations-implementing-feature-flags): turning it on disables the thing it is named after. While it is off, which is its normal state, the feature runs. That shapes the check:
+
+- **The enabled branch holds the fallback**, and the code after it runs the feature.
+- **Name it after what it turns off** (the policy's kill-switch naming, such as `disable-payments-stripe`), so `isEnabled` reads as "is this disabled?" and the inversion is visible at the call site.
+- **The SDK's default keeps the feature running.** `isEnabled` returns false for a flag it doesn't know or can't fetch, so the feature runs as normal if Unleash is unreachable.
 
 ```typescript
 if (unleash.isEnabled('disable-payments-stripe')) {
