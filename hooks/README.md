@@ -4,7 +4,7 @@ This template provides two automation behaviors around feature-flag work. They l
 
 | Behavior | How it works | Where it lives |
 |---|---|---|
-| **Flag audit** (on demand) | Ask Claude to "run a flag audit" and the skill follows the audit workflow | `skills/featureops/references/cleanup-cadence.md` → *Auditing* |
+| **Flag audit** (on demand) | Ask Claude to "run a flag audit" and the skill follows the audit workflow | `skills/featureops/references/audit-cadence.md` → *Auditing* |
 | **High-risk-edit check** (on file edit) | A `PostToolUse` hook matching `Edit`/`Write` that reminds you to evaluate risky changes for a flag | `evaluate-high-risk-save.example.json` (this directory) |
 
 ## Why the file-edit hook is opt-in

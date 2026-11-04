@@ -69,7 +69,7 @@ Pause the rollout immediately (turn the flag off in the affected environment; do
 - **Downstream errors** (database, queue, third-party API) spike.
 
 ### Cleanup and staleness
-- **No-activity window:** a flag with no SDK evaluation (`lastSeenAt`) for **30 days** in every environment where it is enabled is a cleanup candidate.
+- **No-activity window:** a flag with no SDK evaluation (`lastSeenAt`) for **30 days** in every environment where it is enabled is due for removal.
 - **Age vs. type:** a flag older than its type's expected lifetime (see the table above) is overdue.
 - **Permanent types (never audited):** `kill-switch`, `permission`.
 - **Audit cadence:** weekly (more often during release-heavy periods).

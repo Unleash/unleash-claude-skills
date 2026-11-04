@@ -42,5 +42,5 @@ Inspect the flag before changing a rollout, so the change starts from its curren
 ## Related
 
 - Creating the flag: `find-existing-flag.md`
-- Cleanup after a rollout reaches 100%: `remove-flag.md`
+- Removing the flag after a rollout reaches 100%: `remove-flag.md`
 - High-risk domain policies (and their rollout override): the active policy — see `SKILL.md` and `high-risk-domains.md`

@@ -1,4 +1,4 @@
-# Cleanup cadence
+# Audit cadence
 
 When a flag is due for removal, and how to audit a project for such flags. The no-activity window, per-type expected lifetimes, permanent types, audit cadence and ownership come from the **active policy** (see `SKILL.md`). Removing a flag from the code is in `remove-flag.md`.
 
@@ -6,7 +6,7 @@ Most flags are temporary. A flag left in the code after its rollout is a branch 
 
 ## When a flag is due
 
-A flag is a cleanup candidate when any of these hold, strongest signal first:
+A flag is due for removal when any of these hold, strongest signal first:
 
 1. **Someone marked it stale** in Unleash.
 2. **Unleash marked it potentially stale**: it is older than its type's expected lifetime.

@@ -17,7 +17,7 @@ Install it with the plugin (`/plugin install unleash@unleash-marketplace`) or st
 | `references/wrap-change.md` | Where the flag check goes and how to write it. |
 | `references/rollout-guidance.md` | Running a progressive rollout and halting safely. |
 | `references/remove-flag.md` | Taking a flag out of the code and retiring it in Unleash. |
-| `references/cleanup-cadence.md` | When a flag is due for removal; the flag audit. |
+| `references/audit-cadence.md` | When a flag is due for removal; the flag audit. |
 | `references/high-risk-domains.md` | Applying a high-risk domain policy. |
 | `references/flag-usage-patterns.md` | The shapes flag checks take in code and what each covers, shared by the steps above. |
 

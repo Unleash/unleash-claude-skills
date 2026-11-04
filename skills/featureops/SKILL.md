@@ -45,7 +45,7 @@ Load the reference for the step you are on; a task that spans steps loads each i
 | 3. Wrap | Putting code behind a flag | `references/wrap-change.md` |
 | 4. Roll out | Turning a flag on, ramping percentages, halting | `references/rollout-guidance.md` |
 | 5. Remove | Taking a flag out of the code | `references/remove-flag.md` |
-| Audit | Finding flags due for removal | `references/cleanup-cadence.md` |
+| Audit | Finding flags due for removal | `references/audit-cadence.md` |
 | High-risk paths | A change under a high-risk domain in the policy | `references/high-risk-domains.md` |
 
 Present the plan and wait for the user's confirmation before any write to Unleash and before removing a flag from the code. A wrong rollout or a wrongly kept path changes production behavior.

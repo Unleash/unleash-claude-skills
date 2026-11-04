@@ -1,6 +1,6 @@
 # Remove a flag from the code
 
-Delete a flag's checks so the code runs one path unconditionally, then retire the flag in Unleash. When a flag is due for removal comes from `cleanup-cadence.md`.
+Delete a flag's checks so the code runs one path unconditionally, then retire the flag in Unleash. When a flag is due for removal comes from `audit-cadence.md`.
 
 ## 1. Decide which path stays
 
