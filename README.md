@@ -54,7 +54,7 @@ Installs the whole `unleash` plugin (every skill) and registers the **local** MC
 
 Then set the environment variables in [Connect the local server](#connect-the-local-server) and restart Claude Code or run `/reload-plugins`.
 
-> **Version pinning:** the bundled config pins `@unleash/mcp@0.6.0-beta.5` and runs it via `npx`. The skills call that version's tools (`search`, `inspect`, `release`, `manage_flag`, and so on), so if you change the pin in `.mcp.json`, check that the version you pick still provides them.
+> **Server version:** the bundled config runs the latest release of `@unleash/mcp` via `npx`. The skills call its tools (`search`, `inspect`, `release`, `manage_flag`, and so on), so if you pin a specific version in `.mcp.json`, check that it provides them.
 
 #### Option B — Install a single skill standalone (either server)
 
@@ -124,7 +124,7 @@ fi
 Restart the shell. With the plugin (Option A), that's all: the bundled `.mcp.json` reads these variables. With a standalone install (Option B or C), also register the server:
 
 ```bash
-claude mcp add unleash -- npx -y @unleash/mcp@0.6.0-beta.5
+claude mcp add unleash -- npx -y @unleash/mcp@latest
 ```
 
 Unleash's official [Claude Code integration guide](https://docs.getunleash.io/integrate/claude-code) shows the full command (with `-e` env flags and `--scope`) if you prefer to pass credentials inline.

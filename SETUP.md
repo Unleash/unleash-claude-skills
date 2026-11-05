@@ -13,7 +13,7 @@ This plugin drives the **Unleash MCP server** — connect that once and every sk
 - **Standalone / other agents:** register the server yourself under the key `unleash`:
 
   ```bash
-  claude mcp add unleash -- npx -y @unleash/mcp@0.6.0-beta.5
+  claude mcp add unleash -- npx -y @unleash/mcp@latest
   ```
 
   (or your agent's MCP-config equivalent). For the remote HTTP transport, see [`examples/mcp.remote.json`](examples/mcp.remote.json).
