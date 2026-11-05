@@ -31,16 +31,27 @@ If you are configuring the server outside a plugin install (for example, a proje
 
 ### Auth flow
 
-The remote endpoint authenticates via `Authorization: Bearer ${UNLEASH_PAT}`. In the browser-based token-exchange flow, the MCP client exchanges your current login session for a PAT that is valid for **24 hours**. A personal access token created directly in the Unleash admin UI uses whatever expiry you set at creation — for a persistent credential, create it with a long (or no) expiry date. See the [Unleash MCP integration docs](https://docs.getunleash.io/integrate/mcp) for the current auth flow.
+You don't need a token. On first use, Claude Code opens your browser to log in to Unleash (run `/mcp` if it doesn't). Unleash then issues the client a personal access token that is valid for **24 hours**, and the server acts with your permissions.
+
+Where a browser login isn't possible, such as in CI, send a personal access token of your own instead and no login happens:
+
+```json
+"headers": {
+  "Authorization": "Bearer ${UNLEASH_PAT}"
+}
+```
+
+Add this next to `url` in `.mcp.json`. The token keeps the expiry you set when you created it. See the [Unleash MCP integration docs](https://docs.getunleash.io/integrate/mcp) for the current auth flow.
 
 ### Trade-offs
 
 | | Local stdio (default) | Remote HTTP |
 |---|---|---|
-| Node.js 18+ required | ✅ | — |
+| Node.js 24+ required | ✅ | — |
+| Credentials | Your own PAT in `UNLEASH_PAT` | Browser login (or a PAT header for CI) |
 | Admin must enable a server-side toggle | — | ✅ |
 | OAuth DCR required | — | ✅ |
 | Works against any Unleash instance | ✅ | Only instances with remote MCP enabled |
 | Centralized server (no per-laptop process) | — | ✅ |
 
-If you're unsure, start with the default local mode and switch later — the skill, its reference files, and your credentials work identically with both transports.
+If you're unsure, start with the default local mode and switch later. The skills and their reference files work the same with both transports.

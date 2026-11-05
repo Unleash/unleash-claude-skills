@@ -42,7 +42,7 @@ They coexist and serve different consumers — no conflict:
 
 | Group | Variables | Consumed by |
 |---|---|---|
-| MCP server (plugin-wide) | `UNLEASH_BASE_URL`, `UNLEASH_PAT`, `UNLEASH_DEFAULT_PROJECT` | The bundled Unleash MCP server (see the [main README](https://github.com/Unleash/unleash-claude-skills#environment-variables-shared-by-all-skills)) |
+| MCP server (plugin-wide) | `UNLEASH_BASE_URL`, `UNLEASH_PAT` | The bundled Unleash MCP server (see the [main README](https://github.com/Unleash/unleash-claude-skills#connect-the-local-server)) |
 | Migration & app runtime | `UNLEASH_URL`, `UNLEASH_API_TOKEN`, `UNLEASH_CLIENT_TOKEN`, `UNLEASH_FRONTEND_TOKEN`, `GITLAB_API_*` | `scripts/preflight.sh`, the Admin-API recipes, and the migrated app itself |
 
 ## Relationship to the `featureops` skill

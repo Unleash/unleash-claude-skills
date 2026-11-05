@@ -10,23 +10,28 @@ Install it with the plugin (`/plugin install unleash@unleash-marketplace`) or st
 
 | Path | Purpose |
 |---|---|
-| `SKILL.md` | Skill entry point: setup check, active-policy loader, core workflow, tool reference. |
-| `references/policy-defaults.md` | **The policy** — every tunable value (naming, flag types & lifetimes, rollout milestones/holds/thresholds, staleness windows) plus the high-risk domains. Single source of truth, and the template you copy to override. |
-| `references/feature-flag-conventions.md` | *How* to evaluate, reuse, wrap, and name flags. |
-| `references/rollout-guidance.md` | *How* to run a progressive rollout and halt safely. |
-| `references/cleanup-cadence.md` | *How* to decide a flag is stale and remove it; the flag-audit workflow. |
-| `references/high-risk-domains.md` | *How* to apply a high-risk domain policy. |
+| `SKILL.md` | Entry point: setup check, active-policy loader, workflow, Unleash tools. |
+| `references/policy-defaults.md` | **The policy**: every tunable value (naming, flag types and lifetimes, when a flag is required, rollout milestones, holds and thresholds, staleness windows, high-risk domains). Single source of truth, and the template you copy to override. |
+| `references/evaluate-change.md` | Whether a change needs a flag. |
+| `references/find-existing-flag.md` | Finding a flag to reuse before creating one. |
+| `references/wrap-change.md` | Where the flag check goes and how to write it. |
+| `references/rollout-guidance.md` | Running a progressive rollout and halting safely. |
+| `references/remove-flag.md` | Taking a flag out of the code and retiring it in Unleash. |
+| `references/audit-cadence.md` | When a flag is due for removal; the flag audit. |
+| `references/high-risk-domains.md` | Applying a high-risk domain policy. |
+| `references/flag-usage-patterns.md` | The shapes flag checks take in code and what each covers, shared by the steps above. |
 
 ## Use it
 
 The skill activates automatically when you talk about feature flags, rollouts, kill-switches, experiments, or Unleash — or invoke it directly with `/unleash:featureops`. Typical prompts:
 
-- *"Should this checkout change be behind a feature flag?"* → runs `evaluate_change`
-- *"Create a release flag for the new search ranking and wrap the endpoint."* → `detect_flag` → `create_flag` → `wrap_change`
-- *"Roll out `checkout-stripe-integration` to 10% in staging."* → `set_flag_rollout` / `toggle_flag_environment`
-- *"Run a flag audit on the default project."* → the audit workflow in `references/cleanup-cadence.md`
+- *"Should this checkout change be behind a feature flag?"*
+- *"Create a release flag for the new search ranking and wrap the endpoint."*
+- *"Roll out `checkout-stripe-integration` to 10% in staging."*
+- *"Remove the `checkout-stripe-integration` flag, we're keeping the feature."*
+- *"Run a flag audit on the default project."*
 
-The five read-only tools (`evaluate_change`, `detect_flag`, `get_flag_state`, `list_projects`, `list_flags`) are pre-approved while the skill is active; write operations always prompt for confirmation.
+The read-only Unleash tools (`search`, `inspect`, `evaluate`, `audit`, `docs`) are pre-approved while the skill is active; write operations always prompt for confirmation.
 
 ## Customize for your team
 

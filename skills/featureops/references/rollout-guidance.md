@@ -4,7 +4,7 @@ The numbers — milestones, hold durations, halt thresholds, environments, and t
 
 ---
 
-This file applies when rolling out feature flags. Use it to configure `set_flag_rollout` and `toggle_flag_environment`.
+This file applies when rolling out feature flags.
 
 Small batches beat big bangs: releasing to a slice of users and watching the metrics is safer than releasing to everyone and hoping. Progressive exposure limits blast radius and gives real feedback before full commitment.
 
@@ -14,11 +14,11 @@ Advance a new release flag through the active policy's milestones, holding at ea
 
 ## Halt conditions
 
-During any hold, watch the active policy's halt thresholds (error rate and p95 latency), plus user reports of broken functionality and spikes in downstream systems (database, message queue, third-party APIs). If any threshold is breached, pause immediately: call `set_flag_rollout` with `percentage: 0` for the affected environment. Do **not** delete the flag — pausing preserves the rollout history for the postmortem. This is precision rollback: disable what is broken, leave everything else running.
+During any hold, watch the active policy's halt thresholds (error rate and p95 latency), plus user reports of broken functionality and spikes in downstream systems (database, message queue, third-party APIs). If any threshold is breached, pause immediately: turn the flag off in the affected environment, passing the targets it has now (inspect it first) so they are kept for when it resumes. Do **not** delete the flag — pausing preserves the rollout history for the postmortem. This is precision rollback: disable what is broken, leave everything else running.
 
 ## Per-environment activation
 
-Use `toggle_flag_environment` to enable a flag one environment at a time, in the active policy's environment order:
+Enable a flag one environment at a time, in the active policy's environment order:
 
 1. **development** — enable as soon as the flag is created; default-on for local testing.
 2. **staging** — enable after integration tests pass against the new code path.
@@ -28,7 +28,7 @@ Never enable in production before staging unless the user explicitly confirms (e
 
 ## Targeting strategies
 
-`set_flag_rollout` supports targeting beyond simple percentages:
+A rollout can target more than a percentage:
 
 - **Internal-first:** target by employee email domain or a `userType=employee` context attribute — use this before any external exposure.
 - **Beta users:** target a named segment (a curated early-access list).
@@ -37,15 +37,10 @@ Never enable in production before staging unless the user explicitly confirms (e
 
 Always include a sticky identifier so the user experience is consistent across sessions.
 
-## Tools to use
-
-- `set_flag_rollout` — configure percentages, strategies, and targeting.
-- `toggle_flag_environment` — enable/disable in a specific environment.
-- `get_flag_state` — check current rollout state before changing it.
-- `remove_flag_strategy` — clean up unused strategies as the rollout simplifies.
+Inspect the flag before changing a rollout, so the change starts from its current state.
 
 ## Related
 
-- Naming and creation: `feature-flag-conventions.md`
-- Cleanup after a rollout reaches 100%: `cleanup-cadence.md`
+- Creating the flag: `find-existing-flag.md`
+- Removing the flag after a rollout reaches 100%: `remove-flag.md`
 - High-risk domain policies (and their rollout override): the active policy — see `SKILL.md` and `high-risk-domains.md`

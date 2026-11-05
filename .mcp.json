@@ -2,11 +2,10 @@
   "mcpServers": {
     "mcp": {
       "command": "npx",
-      "args": ["-y", "@unleash/mcp@0.5.0", "--log-level", "error"],
+      "args": ["-y", "@unleash/mcp@latest"],
       "env": {
         "UNLEASH_BASE_URL": "${UNLEASH_BASE_URL}",
-        "UNLEASH_PAT": "${UNLEASH_PAT}",
-        "UNLEASH_DEFAULT_PROJECT": "${UNLEASH_DEFAULT_PROJECT:-default}"
+        "UNLEASH_PAT": "${UNLEASH_PAT}"
       }
     }
   }

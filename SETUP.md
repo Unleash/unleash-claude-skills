@@ -5,8 +5,7 @@ This plugin drives the **Unleash MCP server** — connect that once and every sk
 ## 1. Prerequisites
 
 - An **Unleash instance** (Cloud or self-hosted) with API access.
-- A **personal access token (PAT)** with permission to create and manage flags.
-- **Node.js 18+** for the local (stdio) transport.
+- For the local (stdio) transport: **Node.js 24+** and a **personal access token (PAT)** with permission to create and manage flags. The remote transport needs neither: you log in through your browser instead.
 
 ## 2. Connect the MCP server
 
@@ -14,7 +13,7 @@ This plugin drives the **Unleash MCP server** — connect that once and every sk
 - **Standalone / other agents:** register the server yourself under the key `unleash`:
 
   ```bash
-  claude mcp add unleash -- npx -y @unleash/mcp@0.5.0 --log-level error
+  claude mcp add unleash -- npx -y @unleash/mcp@latest
   ```
 
   (or your agent's MCP-config equivalent). For the remote HTTP transport, see [`examples/mcp.remote.json`](examples/mcp.remote.json).
@@ -22,12 +21,11 @@ This plugin drives the **Unleash MCP server** — connect that once and every sk
 ## 3. Set credentials
 
 ```bash
-export UNLEASH_BASE_URL=https://your-instance.getunleash.io/api
+export UNLEASH_BASE_URL=https://your-instance.getunleash.io   # the instance root, without /api
 export UNLEASH_PAT=your-personal-access-token
-export UNLEASH_DEFAULT_PROJECT=default   # optional; defaults to "default"
 ```
 
-For a reusable setup, keep these in `~/.unleash/mcp.env` and source it from your shell profile — see the [README](README.md#environment-variables-shared-by-all-skills).
+For a reusable setup, keep these in `~/.unleash/mcp.env` and source it from your shell profile — see the [README](README.md#connect-the-local-server).
 
 ## 4. Verify
 

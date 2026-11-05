@@ -8,13 +8,13 @@
             "type": "command",
             "if": "Edit(src/payments/**)",
             "statusMessage": "Checking whether this high-risk change needs a feature flag...",
-            "command": "echo 'A file in a high-risk domain was just edited. Before continuing, use the Unleash MCP server evaluate_change tool to determine whether this change should be behind a feature flag. If yes: call detect_flag first to avoid duplicates, then propose create_flag and wrap_change following the naming conventions in the featureops skill references. Do not auto-create — wait for user confirmation.'"
+            "command": "echo 'A file in a high-risk domain was just edited. Before continuing, follow the featureops skill to decide whether this change needs a feature flag. If it does, look for an existing flag before creating one, and propose the flag and the wrapping to the user. Do not create anything in Unleash without their confirmation.'"
           },
           {
             "type": "command",
             "if": "Write(src/payments/**)",
             "statusMessage": "Checking whether this high-risk change needs a feature flag...",
-            "command": "echo 'A file in a high-risk domain was just edited. Before continuing, use the Unleash MCP server evaluate_change tool to determine whether this change should be behind a feature flag. If yes: call detect_flag first to avoid duplicates, then propose create_flag and wrap_change following the naming conventions in the featureops skill references. Do not auto-create — wait for user confirmation.'"
+            "command": "echo 'A file in a high-risk domain was just edited. Before continuing, follow the featureops skill to decide whether this change needs a feature flag. If it does, look for an existing flag before creating one, and propose the flag and the wrapping to the user. Do not create anything in Unleash without their confirmation.'"
           }
         ]
       }

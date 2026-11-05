@@ -10,12 +10,12 @@ This file applies when a change touches files in a high-risk domain — a direct
 
 When the change's path matches a domain's **Scope** glob in the active policy:
 
-1. **Evaluate first.** Call `evaluate_change` before writing implementation code.
+1. **Evaluate first**, following `evaluate-change.md`, before writing implementation code.
 2. **Require a flag.** Do not implement the change without one, even for "small" or "obvious" edits — small changes in these domains have outsized impact.
 3. **Use the domain's default flag type and naming prefix** from the policy.
 4. **Include a realistic fallback** for every external call (a legacy path, a graceful failure message, or queue-and-retry). Hand to the user for review if no clear fallback exists.
 5. **Test the fallback** — at least one test that exercises the flag-disabled path.
-6. **Follow any extra required actions** the domain policy lists (for example, default-off in production and enable in staging first via `toggle_flag_environment`).
+6. **Follow any extra required actions** the domain policy lists (for example, off in production and enabled in staging first).
 
 If a change spans more than one domain, apply the stricter policy.
 
@@ -25,7 +25,7 @@ For any change in a high-risk domain, use the active policy's **high-risk rollou
 
 ## Related
 
-- Naming, types, and the reuse/wrap workflow: `feature-flag-conventions.md`
+- Reusing and wrapping: `find-existing-flag.md`, `wrap-change.md`
 - Rollout mechanics: `rollout-guidance.md`
 - Defining the domains themselves: the active policy (`references/policy-defaults.md`)
 - Automating evaluation on edit: the opt-in `PostToolUse` hook in the plugin repository's `hooks/` directory (https://github.com/Unleash/unleash-claude-skills/tree/main/hooks — not shipped inside this skill directory)
