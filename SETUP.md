@@ -25,7 +25,7 @@ export UNLEASH_BASE_URL=https://your-instance.getunleash.io   # the instance roo
 export UNLEASH_PAT=your-personal-access-token
 ```
 
-For a reusable setup, keep these in `~/.unleash/mcp.env` and source it from your shell profile — see the [README](README.md#environment-variables-shared-by-all-skills).
+For a reusable setup, keep these in `~/.unleash/mcp.env` and source it from your shell profile — see the [README](README.md#connect-the-local-server).
 
 ## 4. Verify
 

@@ -17,27 +17,46 @@ More skills are on the way — see [Add a new skill](#add-a-new-skill).
 
 ## Install
 
+Installing has two parts: the skills, and the [Unleash MCP server](https://github.com/Unleash/unleash-mcp) they call. The server comes in two forms, remote and local, and the one you use decides how you sign in to Unleash.
+
 ### Prerequisites
 
-- **Claude Code** — a recent version (plugin marketplaces and bundled MCP servers are required for Option A).
-- An **Unleash instance** (Cloud or self-hosted) with API access.
-- For local MCP transport (the default): **Node.js 24+** and a **personal access token (PAT)** with permissions to create and manage flags.
-- For remote MCP transport: the Unleash instance admin must enable **Admin settings → Remote MCP server**, and your identity provider must allow OAuth 2.0 Dynamic Client Registration.
+- **Claude Code**, a recent version (plugin marketplaces and bundled MCP servers are required for Option A).
+- An **Unleash instance** (Cloud or self-hosted), plus what the server you choose below needs.
 
-### Option A — Install the plugin (recommended)
+### Choose the MCP server: remote or local
 
-Installs the whole `unleash` plugin (every skill) and auto-registers the Unleash MCP server from the bundled `.mcp.json`.
+| | Remote MCP server | Local MCP server |
+|---|---|---|
+| Where it runs | On your Unleash instance, at `/api/admin/mcp` | On your machine, started through `npx` |
+| How you sign in | Browser login (OAuth). Unleash issues a token valid for 24 hours | A personal access token (PAT) you create and set in `UNLEASH_PAT` |
+| Which instances | Unleash Enterprise, with the remote MCP server turned on | Any instance, Cloud or self-hosted, including open source |
+| Your machine needs | Nothing beyond Claude Code | Node.js 24+ |
+| How to install the skills | Option B or C | Option A, B or C |
+
+**Use the remote server if your instance offers it.** You don't create or store a token: you log in through your browser, and the token Unleash issues expires after 24 hours. It needs two things set up once for the instance:
+
+- an instance admin turns on **Admin settings → Remote MCP server**;
+- your identity provider allows OAuth 2.0 Dynamic Client Registration (DCR) for Unleash.
+
+**Use the local server otherwise**, such as on an open-source instance or when the remote server is off. It authenticates only with a PAT that has permission to create and manage flags.
+
+### Install the skills
+
+#### Option A — Install the plugin (local server)
+
+Installs the whole `unleash` plugin (every skill) and registers the **local** MCP server from the bundled `.mcp.json`. To use the remote server, install the skills with Option B or C instead.
 
 ```text
 /plugin marketplace add Unleash/unleash-claude-skills
 /plugin install unleash@unleash-marketplace
 ```
 
-Then set your environment variables (below) and restart Claude Code or run `/reload-plugins`.
+Then set the environment variables in [Connect the local server](#connect-the-local-server) and restart Claude Code or run `/reload-plugins`.
 
 > **Version pinning:** the bundled config pins `@unleash/mcp@0.6.0-beta.5` and runs it via `npx`. The skills call that version's tools (`search`, `inspect`, `release`, `manage_flag`, and so on), so if you change the pin in `.mcp.json`, check that the version you pick still provides them.
 
-### Option B — Install a single skill standalone
+#### Option B — Install a single skill standalone (either server)
 
 Copy just the skill directory you want into your skills folder:
 
@@ -49,15 +68,9 @@ cp -r skills/featureops ~/.claude/skills/
 mkdir -p .claude/skills && cp -r skills/featureops .claude/skills/
 ```
 
-A standalone skill can't bundle an MCP server, so register it yourself under the key `unleash` (which matches the skills' pre-approved tool names — the bundled `.mcp.json` keys the server `mcp` for the *plugin* path, so add it explicitly here rather than copying that file):
+A standalone skill can't bundle an MCP server, so connect one yourself under the key `unleash`: see [Connect the remote server](#connect-the-remote-server) or [Connect the local server](#connect-the-local-server). The key `unleash` matches the skills' pre-approved tool names; the bundled `.mcp.json` keys the server `mcp` for the *plugin* path, so don't copy that file.
 
-```bash
-claude mcp add unleash -- npx -y @unleash/mcp@0.6.0-beta.5
-```
-
-Unleash's official [Claude Code integration guide](https://docs.getunleash.io/integrate/claude-code) shows the full command (with `-e` env flags and `--scope`) if you prefer to pass credentials inline.
-
-### Option C — via the skills.sh CLI (any agent)
+#### Option C — via the skills.sh CLI (any agent, either server)
 
 The skills are also installable with [Vercel's `skills` CLI](https://skills.sh), which targets Claude Code and 70+ other agents straight from this repo:
 
@@ -66,11 +79,23 @@ npx skills add Unleash/unleash-claude-skills                     # choose skills
 npx skills add Unleash/unleash-claude-skills --skill featureops  # a specific skill
 ```
 
-This copies the skill *files* into your agent — it does **not** set up the Unleash MCP server. Add that yourself (see [Environment variables](#environment-variables-shared-by-all-skills) and the `claude mcp add unleash` command above) so the MCP-backed tools work. `migrate-gitlab-flags` can also run through its import-file or Admin-API paths without MCP.
+This copies the skill *files* into your agent; it does **not** set up the Unleash MCP server. Connect one yourself as in Option B so the MCP-backed tools work. `migrate-gitlab-flags` can also run through its import-file or Admin-API paths without MCP.
 
-### Environment variables (shared by all skills)
+### Connect the remote server
 
-The bundled `.mcp.json` reads these from your environment. Set:
+Register the server with your instance's URL:
+
+```bash
+claude mcp add unleash https://your-instance.getunleash.io/api/admin/mcp --transport http
+```
+
+Add `--scope user` to make it available in all your projects. No environment variables are needed: on first use, Claude Code opens your browser to log in to Unleash (run `/mcp` if it doesn't), and the server acts with your permissions.
+
+Where a browser login isn't possible, such as in CI, the remote server also accepts a PAT of your own as a header. See [`examples/README.md`](examples/README.md), which also covers swapping the plugin's `.mcp.json` for [`examples/mcp.remote.json`](examples/mcp.remote.json) when you run the plugin from a clone of this repo.
+
+### Connect the local server
+
+The local server reads two environment variables. Set:
 
 ```bash
 export UNLEASH_BASE_URL=https://your-instance.getunleash.io   # the instance root, without /api
@@ -96,9 +121,17 @@ if [ -f ~/.unleash/mcp.env ]; then
 fi
 ```
 
-Restart the shell, then restart Claude Code. Verify by asking Claude *"list my Unleash projects"*.
+Restart the shell. With the plugin (Option A), that's all: the bundled `.mcp.json` reads these variables. With a standalone install (Option B or C), also register the server:
 
-**The remote transport needs neither variable:** you log in through your browser on first use. See `examples/README.md`.
+```bash
+claude mcp add unleash -- npx -y @unleash/mcp@0.6.0-beta.5
+```
+
+Unleash's official [Claude Code integration guide](https://docs.getunleash.io/integrate/claude-code) shows the full command (with `-e` env flags and `--scope`) if you prefer to pass credentials inline.
+
+### Verify
+
+Restart Claude Code and run `/mcp` to check that the Unleash server is connected. Then ask Claude *"list my Unleash projects"*.
 
 ## Using the skills
 
