@@ -2,7 +2,7 @@
   "mcpServers": {
     "mcp": {
       "command": "npx",
-      "args": ["-y", "@unleash/mcp@latest"],
+      "args": ["-y", "@unleash/mcp@^0.6.0"],
       "env": {
         "UNLEASH_BASE_URL": "${UNLEASH_BASE_URL}",
         "UNLEASH_PAT": "${UNLEASH_PAT}"
