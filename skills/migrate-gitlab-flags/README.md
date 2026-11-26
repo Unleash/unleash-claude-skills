@@ -1,6 +1,6 @@
 # Migrate GitLab Feature Flags to Unleash (v8+) — `/unleash:migrate-gitlab-flags`
 
-A skill in the [Unleash plugin for Claude Code](https://github.com/Unleash/unleash-claude-skills) that migrates a codebase from **GitLab Feature Flags** (GitLab's Unleash-compatible legacy client API) to a modern **Unleash v8** server. The skill inventories flags and strategies, maps GitLab constructs to Unleash equivalents, provisions the definitions, rewrites the SDK wiring with a minimal diff, and proves behavior parity against a before-state oracle.
+A skill in the [Unleash plugin for Claude Code and Devin](https://github.com/Unleash/unleash-claude-skills) that migrates a codebase from **GitLab Feature Flags** (GitLab's Unleash-compatible legacy client API) to a modern **Unleash v8** server. The skill inventories flags and strategies, maps GitLab constructs to Unleash equivalents, provisions the definitions, rewrites the SDK wiring with a minimal diff, and proves behavior parity against a before-state oracle.
 
 ## Install
 

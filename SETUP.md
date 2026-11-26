@@ -10,6 +10,7 @@ This plugin drives the **Unleash MCP server** — connect that once and every sk
 ## 2. Connect the MCP server
 
 - **Plugin install (Claude Code):** the bundled `.mcp.json` registers the server automatically — you only need to set the environment variables in step 3.
+- **Plugin install (Devin):** `.devin-plugin/plugin.json` registers the server as `unleash`. In Devin Cloud, enter the two values from step 3 when you connect it in Customize → MCPs; in the Devin CLI, set them as in step 3. See [Use with Devin](README.md#use-with-devin).
 - **Standalone / other agents:** register the server yourself under the key `unleash`:
 
   ```bash
@@ -29,4 +30,4 @@ For a reusable setup, keep these in `~/.unleash/mcp.env` and source it from your
 
 ## 4. Verify
 
-Restart your agent, then ask: *"list my Unleash projects."* If it returns your projects, setup is complete. If the Unleash tools aren't available, re-check the environment variables and that the MCP server is connected (in Claude Code, run `/mcp`).
+Restart your agent, then ask: *"list my Unleash projects."* If it returns your projects, setup is complete. If the Unleash tools aren't available, re-check the environment variables and that the MCP server is connected (in Claude Code, run `/mcp`; in the Devin CLI, run `devin mcp list`).

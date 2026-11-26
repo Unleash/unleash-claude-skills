@@ -1,0 +1,43 @@
+{
+  "name": "unleash",
+  "displayName": "Unleash",
+  "version": "2.1.0",
+  "description": "Put risky changes behind Unleash flags, roll them out gradually, and remove stale flags from your code",
+  "shortDescription": "Feature flags and progressive rollouts",
+  "setup": {
+    "notice": "Requires an Unleash instance and a personal access token that can create and manage flags. The server runs with npx and needs Node.js 24 or later.",
+    "steps": [
+      "In Unleash, create a personal access token from your profile",
+      "Enter your instance's root URL, without /api, and the token"
+    ]
+  },
+  "author": {
+    "name": "Unleash",
+    "email": "support@getunleash.io",
+    "url": "https://www.getunleash.io"
+  },
+  "homepage": "https://www.getunleash.io",
+  "repository": "https://github.com/Unleash/unleash-claude-skills",
+  "license": "Apache-2.0",
+  "logo": "assets/logo.png",
+  "keywords": [
+    "Development Tools",
+    "feature flags",
+    "feature management",
+    "progressive delivery",
+    "rollout",
+    "kill switch",
+    "featureops",
+    "unleash"
+  ],
+  "mcpServers": {
+    "unleash": {
+      "command": "npx",
+      "args": ["-y", "@unleash/mcp@^0.6.0"],
+      "env": {
+        "UNLEASH_BASE_URL": "${UNLEASH_BASE_URL}",
+        "UNLEASH_PAT": "${UNLEASH_PAT}"
+      }
+    }
+  }
+}

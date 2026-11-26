@@ -4,6 +4,8 @@ A Claude Code **plugin** that brings [Unleash](https://www.getunleash.io) featur
 
 Skills work out of the box. Some — like [`featureops`](skills/featureops/) — also ship as **customizable templates** you fork and adapt to your team's conventions; each skill's README says whether and how.
 
+The same plugin also installs in Devin: see [Use with Devin](#use-with-devin).
+
 ## Skills
 
 All skills install together under the `unleash` plugin, are invoked as `/unleash:<skill>`, and share one Unleash MCP server connection.
@@ -54,7 +56,7 @@ Installs the whole `unleash` plugin (every skill) and registers the **local** MC
 
 Then set the environment variables in [Connect the local server](#connect-the-local-server) and restart Claude Code or run `/reload-plugins`.
 
-> **Server version:** the bundled config runs `@unleash/mcp@^0.6.0` via `npx`, so you get 0.6.x patch releases automatically but not a new minor version, which may change the tools. The skills call its tools (`search`, `inspect`, `release`, `manage_flag`, and so on), so if you change the range in `.mcp.json`, check that the server still provides them.
+> **Server version:** the bundled config runs `@unleash/mcp@^0.6.0` via `npx`, so you get 0.6.x patch releases automatically but not a new minor version, which may change the tools. The skills call its tools (`search`, `inspect`, `release`, `manage_flag`, and so on), so if you change the range in `.mcp.json` (or `.devin-plugin/plugin.json` for Devin), check that the server still provides them.
 
 #### Option B — Install a single skill standalone (either server)
 
@@ -133,6 +135,37 @@ Unleash's official [Claude Code integration guide](https://docs.getunleash.io/in
 
 Restart Claude Code and run `/mcp` to check that the Unleash server is connected. Then ask Claude *"list my Unleash projects"*.
 
+## Use with Devin
+
+[Devin](https://devin.ai) installs this repository as a plugin too. It reads [`.devin-plugin/plugin.json`](.devin-plugin/plugin.json), which loads both skills (`/unleash:featureops` and `/unleash:migrate-gitlab-flags`) and registers the **local** MCP server under the name `unleash`, so its tools are `mcp__unleash__*`. The manifest declares the server inline, which stops Devin from also loading the root `.mcp.json`, so the server isn't registered twice.
+
+The server runs through `npx` and needs Node.js 24 or later where Devin runs it.
+
+### Devin Cloud
+
+1. In **Customize → Plugins**, search the **Marketplace** for **Unleash** and install it. To install straight from this repository instead, choose **Add plugin → From repository** and enter `Unleash/unleash-claude-skills`.
+2. In **Customize → MCPs**, find the plugin's `unleash` server and choose **Connect**. Enter `UNLEASH_BASE_URL` (your instance root, without `/api`) and `UNLEASH_PAT` (a personal access token that can create and manage flags). Devin saves them on your installation; nothing is stored in this repository.
+3. Start a new session and ask Devin to *"list my Unleash projects"*.
+
+### Devin CLI and Devin Desktop
+
+```bash
+devin plugins install Unleash/unleash-claude-skills
+```
+
+This adds the plugin to your personal plugins, so it also loads in your Devin Cloud sessions and on your other devices. Add `--local` to install it on this machine only. Devin Desktop runs the same local agent as the CLI, so it loads the plugin too.
+
+Locally, the server reads the same two environment variables as [Connect the local server](#connect-the-local-server). Set them in the shell you start Devin from (`devin`, or `devin desktop` for Desktop):
+
+```bash
+export UNLEASH_BASE_URL=https://your-instance.getunleash.io   # the instance root, without /api
+export UNLEASH_PAT=your-personal-access-token
+```
+
+Run `devin mcp list` to check that `unleash` is listed, then ask Devin to *"list my Unleash projects"*.
+
+The Devin CLI also imports MCP servers from Claude Code and Cursor configs, so a server you registered there as `unleash` has the same name as the plugin's. If `devin mcp list` shows an `unleash` entry whose source isn't the plugin, remove the duplicate, or turn off that import with `read_config_from` in `~/.config/devin/config.json`.
+
 ## Using the skills
 
 Once installed, a skill activates automatically when relevant, or you invoke it directly as `/unleash:<skill>`. Read-only MCP tools are pre-approved while a skill is active; write operations always prompt for confirmation.
@@ -148,7 +181,7 @@ The plugin auto-discovers every skill under `skills/` (the marketplace entry sca
 
 1. Create `skills/<name>/SKILL.md` with frontmatter `name: <name>` — it becomes `/unleash:<name>`. (Names can't contain "claude"/"anthropic".)
 2. Add any `references/*.md` files and, for human docs, a `skills/<name>/README.md` (use `skills/featureops/` as the template).
-3. Pre-approve read-only MCP tools in the skill's `allowed-tools` using **both** prefixes — `mcp__unleash__<tool>` (standalone) and `mcp__plugin_unleash_mcp__<tool>` (plugin). Never pre-approve write tools.
+3. Pre-approve read-only MCP tools in the skill's `allowed-tools` using **both** prefixes — `mcp__unleash__<tool>` (standalone installs and the Devin plugin) and `mcp__plugin_unleash_mcp__<tool>` (the Claude Code plugin). Never pre-approve write tools. Skills also load in Devin, which doesn't document Claude Code's `$ARGUMENTS`, `${CLAUDE_SKILL_DIR}` or `` !`…` `` injection: if you use them, say in prose what to do when they arrive unexpanded.
 4. Validate and test:
    ```bash
    claude plugin validate .
@@ -161,15 +194,18 @@ The plugin auto-discovers every skill under `skills/` (the marketplace entry sca
 | Path | Purpose |
 |---|---|
 | `skills/<name>/` | One directory per skill: `SKILL.md`, `references/`, `README.md`, and optionally `scripts/` and `evals/`. |
-| `.mcp.json` | Bundled Unleash MCP server config (local stdio via `npx`), server key `mcp`. Auto-registered on plugin install. The key is deliberate: it produces the plugin tool prefix `mcp__plugin_unleash_mcp__*` that every skill's `allowed-tools` pre-approves — renaming it silently disables those pre-approvals. |
+| `.mcp.json` | Bundled Unleash MCP server config for Claude Code (local stdio via `npx`), server key `mcp`. Auto-registered on plugin install. The key is deliberate: it produces the plugin tool prefix `mcp__plugin_unleash_mcp__*` that every skill's `allowed-tools` pre-approves — renaming it silently disables those pre-approvals. Devin doesn't load it. |
 | `examples/mcp.remote.json` | Remote HTTP transport alternative. |
 | `hooks/` | Optional, opt-in `PostToolUse` example hook + docs. Not loaded automatically. |
-| `.claude-plugin/plugin.json` | Plugin manifest. |
-| `.claude-plugin/marketplace.json` | Marketplace manifest (`unleash-marketplace`). |
+| `.claude-plugin/plugin.json` | Claude Code plugin manifest. |
+| `.claude-plugin/marketplace.json` | Claude Code marketplace manifest (`unleash-marketplace`). |
+| `.devin-plugin/plugin.json` | Devin plugin manifest: the Devin marketplace card (name, descriptions, setup notes, logo) and the `unleash` MCP server, declared inline. |
+| `assets/logo.png` | Logo for the Devin marketplace card. |
 
 ## Compatibility
 
 - **Claude Code** — primary target. Install as a plugin (auto-registers MCP + optional hooks) or copy individual skills (configure MCP manually).
+- **Devin** — Devin Cloud, the Devin CLI and Devin Desktop install the plugin from the Devin marketplace or this repository, and it registers the local MCP server. See [Use with Devin](#use-with-devin).
 - **Portability** — each `SKILL.md` follows the [Agent Skills](https://agentskills.io) open standard, so a skill folder is portable to other Agent Skills surfaces. MCP-driven features need a runtime with network + MCP support; skills degrade to written guidance where those aren't available.
 - **Local stdio transport** — works against any Unleash Cloud or self-hosted instance with API access.
 - **Remote HTTP transport** — requires the instance admin to enable remote MCP and your IDP to permit OAuth 2.0 DCR. See `examples/README.md`.
@@ -177,7 +213,7 @@ The plugin auto-discovers every skill under `skills/` (the marketplace entry sca
 ## Security & permissions
 
 - **Bundled software:** the only external software this plugin configures is the [Unleash MCP server](https://github.com/Unleash/unleash-mcp) ([`@unleash/mcp`](https://www.npmjs.com/package/@unleash/mcp), Apache-2.0, maintained by Unleash). No other binaries or network calls are added. Review the source before installing.
-- **Credentials:** the local server authenticates with an Unleash **personal access token** you provide in `UNLEASH_PAT`. The remote server uses a browser login that issues a 24-hour token. Nothing is committed to the repo, and no credentials are bundled.
+- **Credentials:** the local server authenticates with an Unleash **personal access token** you provide in `UNLEASH_PAT`. The remote server uses a browser login that issues a 24-hour token. In Devin Cloud, the token is saved on your plugin installation when you connect the server. Nothing is committed to the repo, and no credentials are bundled.
 - **Tool approvals:** only **read-only** tools are pre-approved (`search`, `inspect`, `evaluate`, `audit`, `docs`, as each skill lists them). Every **write** tool (`release`, `kill_switch`, `experiment`, `manage_flag`, `configure`) always prompts for explicit confirmation.
 - **Scope of writes:** writes go only to the Unleash instance your token authorizes, at the permission level that token grants.
 

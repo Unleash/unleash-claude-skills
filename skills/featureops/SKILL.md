@@ -11,14 +11,14 @@ allowed-tools: mcp__unleash__search mcp__unleash__inspect mcp__unleash__evaluate
 
 ## Setup check
 
-The skill needs the Unleash MCP server. A plugin install registers it from the bundled `.mcp.json`; set these in the shell that starts your agent:
+The skill needs the Unleash MCP server. Installing the Unleash plugin registers it, and the local server reads two values. In Claude Code or the Devin CLI, set them in the shell that starts your agent:
 
 ```bash
 export UNLEASH_BASE_URL=https://your-instance.getunleash.io
 export UNLEASH_PAT=your-personal-access-token
 ```
 
-On any other install, connect the server yourself (see <https://github.com/Unleash/unleash-claude-skills>). If the Unleash tools are missing, tell the user to finish setup and stop rather than guessing flag state. Deciding, wrapping and removing work on the code alone and still apply.
+In Devin Cloud, enter them when you connect the plugin's `unleash` server in Customize → MCPs. On any other install, connect the server yourself (see <https://github.com/Unleash/unleash-claude-skills>). If the Unleash tools are missing, tell the user to finish setup and stop rather than guessing flag state. Deciding, wrapping and removing work on the code alone and still apply.
 
 ## Active policy
 
@@ -26,13 +26,13 @@ Every tunable value (naming, flag types and lifetimes, when a flag is required, 
 
 **Precedence, highest first: project override, user override, shipped defaults.** For each value, use the highest layer that sets it. The project override and the defaults are inlined below. If `~/.unleash/featureops.md` exists, read it and slot it between them.
 
-**Project override**, `${CLAUDE_PROJECT_DIR}/.unleash/featureops.md`:
+**Project override**, `.unleash/featureops.md` at the project root:
 !`cat "${CLAUDE_PROJECT_DIR}/.unleash/featureops.md" 2>/dev/null || echo "(no project override; using user override and/or the defaults below)"`
 
 **Shipped defaults**, `references/policy-defaults.md`:
 !`cat "${CLAUDE_SKILL_DIR}/references/policy-defaults.md" 2>/dev/null || echo "(defaults file not found; load references/policy-defaults.md manually)"`
 
-> If the two blocks above are empty or show a literal `` !`…` `` command, your agent doesn't run inline injection. Read the three files yourself and apply the same precedence.
+> If the two blocks above are empty or still show the `cat` commands, your agent doesn't run inline injection. Read the files yourself and apply the same precedence: `.unleash/featureops.md` at the project root, `~/.unleash/featureops.md`, and `references/policy-defaults.md` in this skill's directory.
 
 ## Workflow
 
@@ -69,7 +69,7 @@ The references describe what to do in Unleash; these are the tools that do it.
 
 `release`, `kill_switch` and `experiment` create a flag that doesn't exist yet, with its type's defaults and no description. Follow step 2 before calling them with a new name, and create a new flag with `manage_flag` first so it gets the policy's type and a description.
 
-The read-only tools (`search`, `inspect`, `evaluate`, `audit`, `docs`) are pre-approved in `allowed-tools`, under two names each: `mcp__unleash__*` for a standalone install with the server registered as `unleash`, and `mcp__plugin_unleash_mcp__*` for the plugin install. The write tools are never pre-approved. On agents that ignore `allowed-tools`, still never run a write tool without the user's confirmation.
+The read-only tools (`search`, `inspect`, `evaluate`, `audit`, `docs`) are pre-approved in `allowed-tools` under two names each, because the prefix depends on how the server was registered: `mcp__unleash__*` for a server named `unleash` (the Devin plugin, or a standalone install), and `mcp__plugin_unleash_mcp__*` for the Claude Code plugin. The write tools are never pre-approved. On agents that ignore `allowed-tools`, still never run a write tool without the user's confirmation.
 
 ## Migrations
 
