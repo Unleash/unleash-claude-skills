@@ -2,7 +2,7 @@
 name: featureops
 description: Put code changes behind Unleash feature flags and take them out again. Decides whether a change needs a flag, finds an existing flag before creating one, wraps code so the flag works at runtime, plans progressive rollouts, removes flags from the code, and audits stale flags. Use when working with feature flags, feature toggles, rollouts, releases, experiments, kill switches or the Unleash MCP server. Team policy can be overridden per project in `.unleash/featureops.md`.
 license: Apache-2.0
-allowed-tools: mcp__unleash__search mcp__unleash__inspect mcp__unleash__evaluate mcp__unleash__audit mcp__unleash__docs mcp__plugin_unleash_mcp__search mcp__plugin_unleash_mcp__inspect mcp__plugin_unleash_mcp__evaluate mcp__plugin_unleash_mcp__audit mcp__plugin_unleash_mcp__docs
+allowed-tools: mcp__unleash__search mcp__unleash__inspect mcp__unleash__evaluate mcp__unleash__audit mcp__unleash__docs mcp__plugin_unleash_mcp__search mcp__plugin_unleash_mcp__inspect mcp__plugin_unleash_mcp__evaluate mcp__plugin_unleash_mcp__audit mcp__plugin_unleash_mcp__docs Read(/${CLAUDE_SKILL_DIR}/**)
 ---
 
 # Unleash FeatureOps
@@ -24,15 +24,14 @@ In Devin Cloud, enter them when you connect the plugin's `unleash` server in Cus
 
 Every tunable value (naming, flag types and lifetimes, when a flag is required, rollout milestones and holds, halt thresholds, staleness windows, high-risk domains) comes from the **active policy**. The reference files say how to apply the values and never restate them.
 
-**Precedence, highest first: project override, user override, shipped defaults.** For each value, use the highest layer that sets it. The project override and the defaults are inlined below. If `~/.unleash/featureops.md` exists, read it and slot it between them.
+**Precedence, highest first: project override, user override, shipped defaults.** For each value, use the highest layer that sets it. The project override is inlined below. Read the shipped defaults, and `~/.unleash/featureops.md` if it exists, before you apply any value.
 
 **Project override**, `.unleash/featureops.md` at the project root:
 !`cat "${CLAUDE_PROJECT_DIR}/.unleash/featureops.md" 2>/dev/null || echo "(no project override; using user override and/or the defaults below)"`
 
-**Shipped defaults**, `references/policy-defaults.md`:
-!`cat "${CLAUDE_SKILL_DIR}/references/policy-defaults.md" 2>/dev/null || echo "(defaults file not found; load references/policy-defaults.md manually)"`
+**Shipped defaults:** read `references/policy-defaults.md` in this skill's directory now, before anything else. It sets every value.
 
-> If the two blocks above are empty or still show the `cat` commands, your agent doesn't run inline injection. Read the files yourself and apply the same precedence: `.unleash/featureops.md` at the project root, `~/.unleash/featureops.md`, and `references/policy-defaults.md` in this skill's directory.
+> If the block above is empty or still shows the `cat` command, your agent doesn't run inline injection. Read `.unleash/featureops.md` at the project root yourself, and apply the same precedence.
 
 ## Workflow
 
@@ -69,7 +68,7 @@ The references describe what to do in Unleash; these are the tools that do it.
 
 `release`, `kill_switch` and `experiment` create a flag that doesn't exist yet, with its type's defaults and no description. Follow step 2 before calling them with a new name, and create a new flag with `manage_flag` first so it gets the policy's type and a description.
 
-The read-only tools (`search`, `inspect`, `evaluate`, `audit`, `docs`) are pre-approved in `allowed-tools` under two names each, because the prefix depends on how the server was registered: `mcp__unleash__*` for a server named `unleash` (the Devin plugin, or a standalone install), and `mcp__plugin_unleash_mcp__*` for the Claude Code plugin. The write tools are never pre-approved. On agents that ignore `allowed-tools`, still never run a write tool without the user's confirmation.
+The read-only tools (`search`, `inspect`, `evaluate`, `audit`, `docs`) are pre-approved in `allowed-tools` under two names each, because the prefix depends on how the server was registered: `mcp__unleash__*` for a server named `unleash` (the Devin plugin, or a standalone install), and `mcp__plugin_unleash_mcp__*` for the Claude Code plugin. Reading files in this skill's own directory is pre-approved too, so loading the defaults and references doesn't prompt. The write tools are never pre-approved. On agents that ignore `allowed-tools`, still never run a write tool without the user's confirmation.
 
 ## Migrations
 

@@ -13,6 +13,11 @@ All notable changes to the `unleash` plugin. Versions follow [Semantic Versionin
 
 - Skill text works in both Claude Code and Devin: it names the tool prefix for each install (`mcp__unleash__*` for the Devin plugin and standalone installs, `mcp__plugin_unleash_mcp__*` for the Claude Code plugin), mentions `devin mcp list` next to `claude mcp list`, and says what to do when `$ARGUMENTS`, `${CLAUDE_SKILL_DIR}` or the policy injection arrive unexpanded.
 
+### Fixed
+
+- `featureops` no longer fails to load in Claude Code outside auto mode. An injected `cat` may only read files in the session's working directories, and the plugin is installed outside them, so inlining `references/policy-defaults.md` aborted the skill with `Shell command permission check failed`. The skill now reads the defaults with the Read tool, and `allowed-tools` pre-approves reads in the skill's own directory, so the defaults and references load without a prompt. The project override is still inlined.
+- The `featureops` fallback note quoted a literal `` !`…` ``, which Claude Code also tried to run as an injected command.
+
 ## 2.0.0
 
 ### Breaking
