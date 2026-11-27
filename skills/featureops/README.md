@@ -1,6 +1,6 @@
 # FeatureOps — `/unleash:featureops`
 
-A skill in the [Unleash plugin for Claude Code](https://github.com/Unleash/unleash-claude-skills). It brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into your coding agent: evaluate changes for risk, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags.
+A skill in the [Unleash plugin for Claude Code and Devin](https://github.com/Unleash/unleash-claude-skills). It brings [FeatureOps](https://featureops.io) — the discipline of controlling software behavior at runtime — into your coding agent: evaluate changes for risk, create flags with consistent naming, wrap code behind flags, plan progressive rollouts, and clean up stale flags.
 
 This skill ships as a **customizable template**: the defaults work out of the box, and you tailor them to your team by writing a policy override file — no editing the skill. See [Customize for your team](#customize-for-your-team).
 

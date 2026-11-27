@@ -4,7 +4,7 @@ Phase 4 reference. The state-parity invariant governs everything here: a flag en
 
 ## Choose a mechanism (ask the user)
 
-Three ways to get definitions onto the server — they differ mainly in the access the *migration* needs. **First check whether an Unleash MCP server is already connected to this session** (tools prefixed `mcp__unleash__` or `mcp__plugin_unleash_mcp__` — the latter comes bundled with the Unleash plugin for Claude Code and is registered automatically on plugin installs; `claude mcp list` shows standalone entries) — if so, propose MCP as the path. Otherwise ask the user which they prefer; if they have no preference, suggest import files for a governed/production instance and the direct Admin API for a local/dev target.
+Three ways to get definitions onto the server — they differ mainly in the access the *migration* needs. **First check whether an Unleash MCP server is already connected to this session** (tools prefixed `mcp__unleash__` — a server named `unleash`, as the Devin plugin or a standalone install registers it — or `mcp__plugin_unleash_mcp__`, the server bundled with the Claude Code plugin; `claude mcp list` or `devin mcp list` shows what's configured) — if so, propose MCP as the path. Otherwise ask the user which they prefer; if they have no preference, suggest import files for a governed/production instance and the direct Admin API for a local/dev target.
 
 | Mechanism | Access the migration needs | Covers | When it fits |
 |---|---|---|---|
@@ -42,7 +42,7 @@ Naming hint: Unleash docs, source, and SDK repositories often call a **backend t
 
 Two hosting modes, same tools ([documentation](https://docs.getunleash.io/integrate/mcp) and [GitHub Repository](https://github.com/unleash/unleash-mcp)). If the session already has the server connected, use it directly — no setup step.
 
-- **Local**: `npx -y '@unleash/mcp@^0.6.0'` (Node.js 24+) with `UNLEASH_BASE_URL` (the instance root, without `/api`) + `UNLEASH_PAT` env vars (Claude Code: `claude mcp add unleash --env … -- npx -y '@unleash/mcp@^0.6.0'`). There is no dry-run mode; rehearse against a scratch project.
+- **Local**: `npx -y '@unleash/mcp@^0.6.0'` (Node.js 24+) with `UNLEASH_BASE_URL` (the instance root, without `/api`) + `UNLEASH_PAT` env vars (Claude Code: `claude mcp add unleash --env … -- npx -y '@unleash/mcp@^0.6.0'`; the Unleash plugin for Claude Code or Devin registers it for you). There is no dry-run mode; rehearse against a scratch project.
 - **Remote** (Enterprise): the instance itself serves `https://<instance-url>/api/admin/mcp` once enabled (Admin settings → Remote MCP server). Authenticates by default through OAuth 2.0 Dynamic Client Registration: the browser flow exchanges the login session for a 24-hour PAT, and the org must permit DCR self-registration. Where no browser is available (CI), send a PAT in an `Authorization: Bearer` header instead. No local install; fits orgs that centralize access control.
 
 Tool mapping for the inventory:

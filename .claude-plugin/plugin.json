@@ -1,6 +1,6 @@
 {
   "name": "unleash",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Unleash feature management for Claude Code: skills for the full flag lifecycle — evaluate risk, create and wrap flags, plan rollouts, clean up stale flags, and migrate flags from GitLab — backed by the bundled Unleash MCP server.",
   "author": {
     "name": "Unleash",

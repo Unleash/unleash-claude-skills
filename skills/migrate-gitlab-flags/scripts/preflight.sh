@@ -61,7 +61,7 @@ if [[ "$mode" == "api" ]]; then
 elif [[ "$mode" == "mcp" ]]; then
   # A locally-configured server needs these; a session-connected or remote MCP
   # server may not surface them here — hence warnings, not failures.
-  [[ -n "${UNLEASH_BASE_URL:-}" ]] || warn "UNLEASH_BASE_URL not set — fine if the MCP server is already connected to the session (check the MCP tool list / claude mcp list)"
+  [[ -n "${UNLEASH_BASE_URL:-}" ]] || warn "UNLEASH_BASE_URL not set — fine if the MCP server is already connected to the session (check the MCP tool list, or claude mcp list / devin mcp list)"
   [[ -n "${UNLEASH_PAT:-}" ]] || warn "UNLEASH_PAT not set — fine if the MCP server is already connected or uses remote OAuth"
 else
   ok "mode=import — no Unleash credentials required (files are applied by a human/CI)"
