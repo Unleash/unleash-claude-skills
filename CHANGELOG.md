@@ -12,6 +12,7 @@ All notable changes to the `unleash` plugin. Versions follow [Semantic Versionin
 ### Changed
 
 - Skill text works in both Claude Code and Devin: it names the tool prefix for each install (`mcp__unleash__*` for the Devin plugin and standalone installs, `mcp__plugin_unleash_mcp__*` for the Claude Code plugin), mentions `devin mcp list` next to `claude mcp list`, and says what to do when `$ARGUMENTS`, `${CLAUDE_SKILL_DIR}` or the policy injection arrive unexpanded.
+- Both skills pre-approve reads in their own directory (`Read(/${CLAUDE_SKILL_DIR}/**)` in `allowed-tools`), so Claude Code loads their reference files without a permission prompt. The README's "Add a new skill" guide recommends the same for new skills.
 
 ### Fixed
 

@@ -4,7 +4,7 @@ description: Migrates a codebase from GitLab Feature Flags (the Unleash-compatib
 license: Apache-2.0
 argument-hint: [path-to-app-or-repo]
 disable-model-invocation: true
-allowed-tools: mcp__unleash__search mcp__unleash__inspect mcp__plugin_unleash_mcp__search mcp__plugin_unleash_mcp__inspect
+allowed-tools: mcp__unleash__search mcp__unleash__inspect mcp__plugin_unleash_mcp__search mcp__plugin_unleash_mcp__inspect Read(/${CLAUDE_SKILL_DIR}/**)
 ---
 
 # Migrate GitLab Feature Flags to Unleash (v8+)

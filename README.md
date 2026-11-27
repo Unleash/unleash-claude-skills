@@ -181,7 +181,7 @@ The plugin auto-discovers every skill under `skills/` (the marketplace entry sca
 
 1. Create `skills/<name>/SKILL.md` with frontmatter `name: <name>` — it becomes `/unleash:<name>`. (Names can't contain "claude"/"anthropic".)
 2. Add any `references/*.md` files and, for human docs, a `skills/<name>/README.md` (use `skills/featureops/` as the template).
-3. Pre-approve read-only MCP tools in the skill's `allowed-tools` using **both** prefixes — `mcp__unleash__<tool>` (standalone installs and the Devin plugin) and `mcp__plugin_unleash_mcp__<tool>` (the Claude Code plugin). Never pre-approve write tools. Skills also load in Devin, which doesn't document Claude Code's `$ARGUMENTS`, `${CLAUDE_SKILL_DIR}` or `` !`…` `` injection: if you use them, say in prose what to do when they arrive unexpanded.
+3. Pre-approve read-only MCP tools in the skill's `allowed-tools` using **both** prefixes — `mcp__unleash__<tool>` (standalone installs and the Devin plugin) and `mcp__plugin_unleash_mcp__<tool>` (the Claude Code plugin). Never pre-approve write tools. Also add `Read(/${CLAUDE_SKILL_DIR}/**)` so the skill can read its own references without a prompt; the leading `/` makes the rule absolute. Don't inline files from `${CLAUDE_SKILL_DIR}` with `` !`cat …` ``: Claude Code only lets an injected `cat` read the session's working directories, and an installed plugin sits outside them, so the skill fails to load. Skills also load in Devin, which doesn't document Claude Code's `$ARGUMENTS`, `${CLAUDE_SKILL_DIR}` or `` !`…` `` injection: if you use them, say in prose what to do when they arrive unexpanded.
 4. Validate and test:
    ```bash
    claude plugin validate .
